@@ -1,7 +1,7 @@
 package requests
 
 import (
-	"github.com/deltadefi-protocol/go-sdk/pkg/api/common"
+	"github.com/deltadefi-protocol/go-sdk/pkg/utils"
 	"github.com/sidan-lab/rum/models"
 )
 
@@ -38,12 +38,12 @@ type SubmitWithdrawalTransactionRequest struct {
 }
 
 type BuildPostOrderTransactionRequest struct {
-	Pair       common.TradingPair `json:"pair"`
-	Side       common.TradingSide `json:"side"`
-	Type       common.TradingType `json:"type"`
-	Quantity   float64            `json:"quantity"`
-	Price      *float64           `json:"price,omitempty"`
-	BasisPoint *float64           `json:"basis_point,omitempty"`
+	Pair       utils.TradingPair `json:"pair"`
+	Side       utils.TradingSide `json:"side"`
+	Type       utils.TradingType `json:"type"`
+	Quantity   float64           `json:"quantity"`
+	Price      *float64          `json:"price,omitempty"`
+	BasisPoint *float64          `json:"basis_point,omitempty"`
 }
 
 type SubmitPostOrderTransactionRequest struct {

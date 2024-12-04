@@ -1,4 +1,8 @@
-package responses
+package api
+
+import (
+	"github.com/deltadefi-protocol/go-sdk/pkg/utils"
+)
 
 type ApiNetwork string
 
@@ -11,5 +15,5 @@ type ApiConfig struct {
 	Network *ApiNetwork `json:"network,omitempty"`
 	//TODO AppWalletKeyType
 	SigningKey int `json:"signingKey,omitempty"`
-	AuthHeaders
+	utils.AuthHeaders
 }

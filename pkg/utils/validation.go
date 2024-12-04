@@ -1,7 +1,7 @@
-package responses
+package utils
 
 import (
-	"github.com/sidan-lab/rum/models"
+	rmodels "github.com/sidan-lab/rum/models"
 )
 
 /**
@@ -12,10 +12,10 @@ import (
  * @property {string} tradingFee - The trading fee.
  */
 type DeltaDeFiOrderInfo struct {
-	AssetsToPay    []models.Asset `json:"assetsToPay"`
-	AssetsToReturn []models.Asset `json:"assetsToReturn"`
-	TxFee          string         `json:"txFee"`
-	TradingFee     string         `json:"tradingFee"`
+	AssetsToPay    []rmodels.Asset `json:"assetsToPay"`
+	AssetsToReturn []rmodels.Asset `json:"assetsToReturn"`
+	TxFee          string          `json:"txFee"`
+	TradingFee     string          `json:"tradingFee"`
 }
 
 /**
@@ -28,8 +28,8 @@ type DeltaDeFiOrderInfo struct {
  * @property {string} tradingFee - The trading fee.
  */
 type DeltaDeFiTxInfo struct {
-	AccountInput  []models.Asset       `json:"accountInput"`
-	AccountOutput []models.Asset       `json:"accountOutput"`
+	AccountInput  []rmodels.Asset      `json:"accountInput"`
+	AccountOutput []rmodels.Asset      `json:"accountOutput"`
 	DexInput      []DeltaDeFiOrderInfo `json:"dexInput"`
 	DexOutput     []DeltaDeFiOrderInfo `json:"dexOutput"`
 	TxFee         string               `json:"txFee"`

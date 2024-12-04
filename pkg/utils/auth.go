@@ -1,4 +1,4 @@
-package responses
+package utils
 
 type AuthHeaders struct {
 	JWT    *string `json:"jwt,omitempty"`

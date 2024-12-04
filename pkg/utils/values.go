@@ -1,9 +1,9 @@
-package responses
+package utils
 
 import (
 	"strconv"
 
-	"github.com/sidan-lab/rum/models"
+	rmodels "github.com/sidan-lab/rum/models"
 )
 
 type Value struct {
@@ -27,7 +27,7 @@ func NewValue() *Value {
  * @param asset
  * @returns this
  */
-func (v *Value) AddAsset(asset *models.Asset) *Value {
+func (v *Value) AddAsset(asset *rmodels.Asset) *Value {
 	quantity, err := strconv.ParseInt(asset.Quantity, 10, 64)
 	if err != nil {
 		// TODO: Handle error
@@ -53,7 +53,7 @@ func (v *Value) AddAsset(asset *models.Asset) *Value {
  * @param assets
  * @returns this
  */
-func (v *Value) AddAssets(assets []*models.Asset) *Value {
+func (v *Value) AddAssets(assets []*rmodels.Asset) *Value {
 	for _, asset := range assets {
 		v.AddAsset(asset)
 	}
@@ -70,7 +70,7 @@ func (v *Value) AddAssets(assets []*models.Asset) *Value {
  * @param asset
  * @returns this
  */
-func (v *Value) NegateAsset(asset *models.Asset) *Value {
+func (v *Value) NegateAsset(asset *rmodels.Asset) *Value {
 	unit := asset.Unit
 	quantity, err := strconv.ParseInt(asset.Quantity, 10, 64)
 	if err != nil {
@@ -96,7 +96,7 @@ func (v *Value) NegateAsset(asset *models.Asset) *Value {
  * @param assets
  * @returns this
  */
-func (v *Value) NegateAssets(assets []*models.Asset) *Value {
+func (v *Value) NegateAssets(assets []*rmodels.Asset) *Value {
 	for _, asset := range assets {
 		v.NegateAsset(asset)
 	}
