@@ -2,7 +2,7 @@ package requests
 
 import (
 	"github.com/deltadefi-protocol/go-sdk/pkg/utils"
-	"github.com/sidan-lab/rum/models"
+	rmodels "github.com/sidan-lab/rum/models"
 )
 
 type SignInRequest struct {
@@ -11,8 +11,8 @@ type SignInRequest struct {
 }
 
 type BuildSendRefScriptsTransactionRequest struct {
-	InputUTxOs         []models.UTxO  `json:"input_utxos"`
-	TotalDepositAmount []models.Asset `json:"total_deposit_amount"`
+	InputUTxOs         []rmodels.UTxO  `json:"input_utxos"`
+	TotalDepositAmount []rmodels.Asset `json:"total_deposit_amount"`
 }
 
 type SubmitSendRefScriptsTransactionRequest struct {
@@ -20,8 +20,8 @@ type SubmitSendRefScriptsTransactionRequest struct {
 }
 
 type BuildDepositTransactionRequest struct {
-	DepositAmount []models.Asset `json:"deposit_amount"`
-	InputUTxOs    []models.UTxO  `json:"input_utxos"`
+	DepositAmount []rmodels.Asset `json:"deposit_amount"`
+	InputUTxOs    []rmodels.UTxO  `json:"input_utxos"`
 }
 
 type SubmitDepositTransactionRequest struct {
@@ -29,8 +29,8 @@ type SubmitDepositTransactionRequest struct {
 }
 
 type BuildWithdrawalTransactionRequest struct {
-	WithdrawalAmount []models.Asset `json:"withdrawal_amount"`
-	InputUTxOs       []models.UTxO  `json:"input_utxos"`
+	WithdrawalAmount []rmodels.Asset `json:"withdrawal_amount"`
+	InputUTxOs       []rmodels.UTxO  `json:"input_utxos"`
 }
 
 type SubmitWithdrawalTransactionRequest struct {
@@ -84,5 +84,5 @@ type SubmitDeleteAccountTransactionRequest struct {
 }
 
 type GetDepositInfoRequest struct {
-	TotalDepositAmount []models.Asset `json:"total_deposit_amount"`
+	TotalDepositAmount []rmodels.Asset `json:"total_deposit_amount"`
 }
