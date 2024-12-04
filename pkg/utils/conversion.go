@@ -23,11 +23,12 @@ func ConvertUTxOs(utxos []*rmodels.UTxO) []*InputUtxos {
 	return result
 }
 
-func ConvertTxInParameter(txIn *TxInParameter) *InputUtxos {
-	return &InputUtxos{
-		TxHash:  txIn.TxHash,
-		TxID:    strconv.Itoa(txIn.TxIndex),
-		Amount:  txIn.Amount,
-		Address: txIn.Address,
-	}
-}
+// TODO: add TxInParameter in rum
+// func ConvertTxInParameter(txIn *TxInParameter) *InputUtxos {
+// 	return &InputUtxos{
+// 		TxHash:  txIn.TxHash,
+// 		TxID:    strconv.Itoa(txIn.TxIndex),
+// 		Amount:  txIn.Amount,
+// 		Address: txIn.Address,
+// 	}
+// }
