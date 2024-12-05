@@ -14,22 +14,33 @@ import (
 
 type Client struct {
 	apiKey     string
-	network    string
-	version    string
+	NetworkId  uint8
+	Jwt        string
 	HTTPClient *http.Client
 	BaseUrl    string
 }
 
-func NewClient(apiKey string, network string) *Client {
+func NewClient(apiKey string, network string, jwt string) *Client {
 	cfg := config.GetConfig()
+	var networkId uint8
+	var baseUrl string
+
+	if network == "mainnet" {
+		networkId = uint8(1)
+		baseUrl = "https://api-dev.deltadefi.io" // TODO: input production link once available
+	} else {
+		networkId = uint8(0)
+		baseUrl = "https://api-dev.deltadefi.io"
+	}
+
 	return &Client{
-		apiKey:  apiKey,
-		network: network,
-		version: cfg.Client.Version,
+		apiKey:    apiKey,
+		NetworkId: networkId,
+		Jwt:       jwt,
 		HTTPClient: &http.Client{
-			Timeout: 5 * time.Minute,
+			Timeout: time.Duration(cfg.Client.Timeout) * time.Minute,
 		},
-		BaseUrl: fmt.Sprintf("https://%s.gomaestro-api.org/%s", network, cfg.Client.Version),
+		BaseUrl: baseUrl,
 	}
 }
 
@@ -47,8 +58,10 @@ func (c *Client) sendRequest(req *http.Request, responseBody *string) error {
 	if req == nil {
 		return fmt.Errorf("empty request")
 	}
+
 	req.Header.Set("Accept", "application/json")
 	req.Header.Add("api-key", c.apiKey)
+	req.Header.Set("Authorization", c.Jwt)
 
 	if c.HTTPClient == nil {
 		return fmt.Errorf("missing http client")
@@ -92,8 +105,11 @@ func (c *Client) get(url string) (*http.Response, error) {
 	if req == nil {
 		return nil, fmt.Errorf("empty request")
 	}
+
 	req.Header.Set("Accept", "application/json")
 	req.Header.Add("api-key", c.apiKey)
+	req.Header.Set("Authorization", c.Jwt)
+
 	return c.HTTPClient.Do(req)
 }
 
@@ -109,9 +125,12 @@ func (c *Client) post(url string, body interface{}) (*http.Response, error) {
 	if req == nil {
 		return nil, fmt.Errorf("empty request")
 	}
+
 	req.Header.Set("Accept", "application/json")
 	req.Header.Add("api-key", c.apiKey)
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", c.Jwt)
+
 	return c.HTTPClient.Do(req)
 }
 
@@ -123,8 +142,11 @@ func (c *Client) postBuffer(url string, buffer []byte) (*http.Response, error) {
 	if req == nil {
 		return nil, fmt.Errorf("empty request")
 	}
+
 	req.Header.Set("Accept", "application/cbor")
 	req.Header.Add("api-key", c.apiKey)
 	req.Header.Set("Content-Type", "application/cbor")
+	req.Header.Set("Authorization", c.Jwt)
+
 	return c.HTTPClient.Do(req)
 }
