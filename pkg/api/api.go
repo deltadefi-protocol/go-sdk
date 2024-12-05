@@ -13,7 +13,7 @@ const (
 
 type ApiConfig struct {
 	Network *ApiNetwork `json:"network,omitempty"`
-	//TODO AppWalletKeyType
+	// TODO: AppWalletKeyType
 	SigningKey int `json:"signingKey,omitempty"`
 	utils.AuthHeaders
 }

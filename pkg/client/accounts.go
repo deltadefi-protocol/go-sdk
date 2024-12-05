@@ -39,22 +39,3 @@ func (a *Accounts) SignIn(ctx context.Context, data *requests.SignInRequest) (*r
 	}
 	return &resp, nil
 }
-
-func (a *Accounts) GetBalance(ctx context.Context) (*responses.GetBalanceResponse, error) {
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "/accounts/balance", nil)
-	if err != nil {
-		return nil, err
-	}
-
-	res, err := a.httpClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer res.Body.Close()
-
-	var resp responses.GetBalanceResponse
-	if err := json.NewDecoder(res.Body).Decode(&resp); err != nil {
-		return nil, err
-	}
-	return &resp, nil
-}

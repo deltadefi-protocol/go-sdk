@@ -32,6 +32,4 @@ type DeltaDeFiTxInfo struct {
 	AccountOutput []rmodels.Asset      `json:"accountOutput"`
 	DexInput      []DeltaDeFiOrderInfo `json:"dexInput"`
 	DexOutput     []DeltaDeFiOrderInfo `json:"dexOutput"`
-	TxFee         string               `json:"txFee"`
-	TradingFee    string               `json:"tradingFee"`
 }

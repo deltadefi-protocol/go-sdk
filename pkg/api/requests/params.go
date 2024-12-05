@@ -1,4 +1,4 @@
-package utils
+package requests
 
 import (
 	rmodels "github.com/sidan-lab/rum/models"

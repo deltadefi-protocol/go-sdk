@@ -1,7 +1,7 @@
 package requests
 
 import (
-	"github.com/deltadefi-protocol/go-sdk/pkg/utils"
+	"github.com/deltadefi-protocol/go-sdk/pkg/models"
 	rmodels "github.com/sidan-lab/rum/models"
 )
 
@@ -10,51 +10,39 @@ type SignInRequest struct {
 	AuthKey       string `json:"auth_key"`
 }
 
-type BuildSendRefScriptsTransactionRequest struct {
-	InputUTxOs         []rmodels.UTxO  `json:"input_utxos"`
-	TotalDepositAmount []rmodels.Asset `json:"total_deposit_amount"`
-}
+// type BuildSendRefScriptsTransactionRequest struct {
+// 	InputUTxOs         []rmodels.UTxO  `json:"input_utxos"`
+// 	TotalDepositAmount []rmodels.Asset `json:"total_deposit_amount"`
+// }
 
-type SubmitSendRefScriptsTransactionRequest struct {
-	SignedTx string `json:"signed_tx"`
-}
+// type SubmitSendRefScriptsTransactionRequest struct {
+// 	SignedTx string `json:"signed_tx"`
+// }
 
+// type PostOrderRequest = BuildPostOrderTransactionRequest
+
+//	type SubmitDeleteAccountTransactionRequest struct {
+//		SignedTx string `json:"signed_tx"`
+//	}
 type BuildDepositTransactionRequest struct {
 	DepositAmount []rmodels.Asset `json:"deposit_amount"`
-	InputUTxOs    []rmodels.UTxO  `json:"input_utxos"`
+	InputUtxos    []*rmodels.UTxO `json:"input_utxos"`
+}
+
+type BuildWithdrawalTransactionRequest struct {
+	WithdrawalAmount []rmodels.Asset `json:"withdrawal_amount"`
 }
 
 type SubmitDepositTransactionRequest struct {
 	SignedTx string `json:"signed_tx"`
 }
 
-type BuildWithdrawalTransactionRequest struct {
-	WithdrawalAmount []rmodels.Asset `json:"withdrawal_amount"`
-	InputUTxOs       []rmodels.UTxO  `json:"input_utxos"`
-}
-
 type SubmitWithdrawalTransactionRequest struct {
 	SignedTxs []string `json:"signed_txs"`
 }
 
-type BuildPostOrderTransactionRequest struct {
-	Pair       utils.TradingPair `json:"pair"`
-	Side       utils.TradingSide `json:"side"`
-	Type       utils.TradingType `json:"type"`
-	Quantity   float64           `json:"quantity"`
-	Price      *float64          `json:"price,omitempty"`
-	BasisPoint *float64          `json:"basis_point,omitempty"`
-}
-
-type SubmitPostOrderTransactionRequest struct {
-	OrderID   string   `json:"order_id"`
-	SignedTxs []string `json:"signed_txs"`
-}
-
-type PostOrderRequest = BuildPostOrderTransactionRequest
-
-type GetDepthRequest struct {
-	Pair string `json:"pair"`
+type GetMarketDepthRequest struct {
+	Pair models.TradingSymbol `json:"pair"`
 }
 
 type GetMarketPriceRequest struct {
@@ -75,14 +63,24 @@ const (
 type GetAggregatedPriceRequest struct {
 	Pair     string   `json:"pair"`
 	Interval Interval `json:"interval"`
-	Start    *int64   `json:"start,omitempty"`
-	End      *int64   `json:"end,omitempty"`
+	Start    *int64   `json:"start,omitempty"` // timestamp
+	End      *int64   `json:"end,omitempty"`   // timestamp
 }
 
-type SubmitDeleteAccountTransactionRequest struct {
+type BuildPlaceOrderTransactionRequest struct {
+	Pair       models.TradingSymbol `json:"pair"`
+	Side       models.OrderSide     `json:"side"`
+	Type       models.OrderType     `json:"type"`
+	Quantity   float64              `json:"quantity"`
+	Price      *float64             `json:"price,omitempty"`
+	BasisPoint *float64             `json:"basis_point,omitempty"`
+}
+
+type SubmitPlaceOrderTransactionRequest struct {
+	OrderID  string `json:"order_id"`
 	SignedTx string `json:"signed_tx"`
 }
 
-type GetDepositInfoRequest struct {
-	TotalDepositAmount []rmodels.Asset `json:"total_deposit_amount"`
+type SubmitCancelOrderTransactionRequest struct {
+	SignedTx string `json:"signed_tx"`
 }

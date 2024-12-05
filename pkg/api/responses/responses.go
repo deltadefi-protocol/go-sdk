@@ -10,23 +10,6 @@ type SignInResponse struct {
 	IsReady bool   `json:"is_ready"`
 }
 
-type Balance struct {
-	Total                  map[string]int64 `json:"total"`
-	AvailableForTrade      map[string]int64 `json:"available_for_trade"`
-	AvailableForWithdrawal map[string]int64 `json:"available_for_withdrawal"`
-	HeldForOrder           map[string]int64 `json:"held_for_order"`
-	SpendingSettling       map[string]int64 `json:"spending_settling"`
-	DepositingSettling     map[string]int64 `json:"depositing_settling"`
-}
-
-type GetBalanceResponse struct {
-	Balance *Balance `json:"balance"`
-}
-
-type GetOrdersResponse struct {
-	Orders []*models.Order `json:"orders"`
-}
-
 type BuildSendRefScriptsTransactionResponse struct {
 	TxHex string `json:"tx_hex"`
 }
@@ -34,8 +17,49 @@ type BuildSendRefScriptsTransactionResponse struct {
 type SubmitSendRefScriptsTransactionResponse struct {
 	TxHash string `json:"tx_hash"`
 }
+type SubmitPostOrderTransactionResponse struct {
+	Order   *models.OrderJSON `json:"order"`
+	TxHexes string            `json:"tx_hexes"`
+}
+
+type PostOrderResponse = *SubmitPostOrderTransactionResponse
+
+type DepositRecord struct {
+	CreatedAt string          `json:"created_at"`
+	Assets    []rmodels.Asset `json:"assets"`
+	TxHash    string          `json:"tx_hash"`
+}
+
+type GetDepositRecordsResponse []*DepositRecord
+
+type GetOrderRecordResponse struct {
+	Orders []*models.OrderJSON `json:"Orders"`
+}
+
+type WithdrawalRecord struct {
+	CreatedAt string          `json:"created_at"`
+	Assets    []rmodels.Asset `json:"assets"`
+}
+
+type GetWithdrawalRecordsResponse []*WithdrawalRecord
+
+type AssetBalance struct {
+	Asset  string `json:"asset"`
+	Free   int64  `json:"free"`
+	Locked int64  `json:"locked"`
+}
+
+type GetAccountBalanceResponse []*AssetBalance
+
+type GenerateNewAPIKeyResponse struct {
+	APIKey string `json:"api_key"`
+}
 
 type BuildDepositTransactionResponse struct {
+	TxHex string `json:"tx_hex"`
+}
+
+type BuildWithdrawalTransactionResponse struct {
 	TxHex string `json:"tx_hex"`
 }
 
@@ -43,29 +67,12 @@ type SubmitDepositTransactionResponse struct {
 	TxHash string `json:"tx_hash"`
 }
 
-type BuildWithdrawalTransactionResponse struct {
-	TxHexes []string `json:"tx_hexes"`
-}
-
 type SubmitWithdrawalTransactionResponse struct {
 	TxHash string `json:"tx_hash"`
 }
 
-type BuildPostOrderTransactionResponse struct {
-	OrderID    string   `json:"order_id"`
-	ChainedTxs []string `json:"chained_txs"`
-	TxHexes    []string `json:"tx_hexes"`
-}
-
-type SubmitPostOrderTransactionResponse struct {
-	Order   *models.Order `json:"order"`
-	TxHexes []string      `json:"tx_hexes"`
-}
-
-type PostOrderResponse = SubmitPostOrderTransactionResponse
-
-type CancelOrderResponse struct {
-	Message string `json:"message"`
+type GetTermsAndConditionResponse struct {
+	Value string `json:"value"`
 }
 
 type MarketDepth struct {
@@ -73,7 +80,7 @@ type MarketDepth struct {
 	Quantity float64 `json:"quantity"`
 }
 
-type GetDepthResponse struct {
+type GetMarketDepthResponse struct {
 	Bids []MarketDepth `json:"bids"`
 	Asks []MarketDepth `json:"asks"`
 }
@@ -94,33 +101,19 @@ type Trade struct {
 
 type GetAggregatedPriceResponse []*Trade
 
-type GetAccountInfoResponse struct {
-	APIKey        string `json:"api_key"`
-	APILimit      string `json:"api_limit"`
-	CreatedAt     string `json:"created_at"`
-	UpdatedAt     string `json:"updated_at"`
-	WalletAddress string `json:"wallet_address"`
-	IsReady       bool   `json:"is_ready"`
+type BuildPlaceOrderTransactionResponse struct {
+	OrderID string `json:"order_id"`
+	TxHex   string `json:"tx_hex"`
 }
 
-type GetNewApiKeyResponse struct {
-	APIKey string `json:"api_key"`
-}
-
-type BuildDeleteAccountTransactionResponse struct {
+type BuildCancelOrderTransactionResponse struct {
 	TxHex string `json:"tx_hex"`
 }
 
-type SubmitDeleteAccountTransactionResponse struct {
-	TxHash string `json:"tx_hash"`
+type SubmitPlaceOrderTransactionResponse struct {
+	Order *models.OrderJSON `json:"order"`
 }
 
-type GetDepositInfoResponse struct {
-	TotalDeposit     *DepositInfo `json:"total_deposit"`
-	SuggestedDeposit *DepositInfo `json:"suggested_deposit"`
-}
-
-type DepositInfo struct {
-	Amount             []*rmodels.Asset `json:"amount"`
-	PostDepositBalance *Balance         `json:"post_deposit_balance"`
+type SubmitCancelOrderTransactionResponse struct {
+	TxHash string `json:"txhash"`
 }

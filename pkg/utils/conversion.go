@@ -3,11 +3,12 @@ package utils
 import (
 	"strconv"
 
+	"github.com/deltadefi-protocol/go-sdk/pkg/api/requests"
 	rmodels "github.com/sidan-lab/rum/models"
 )
 
-func ConvertUTxO(utxo *rmodels.UTxO) *InputUtxos {
-	return &InputUtxos{
+func ConvertUTxO(utxo *rmodels.UTxO) *requests.InputUtxos {
+	return &requests.InputUtxos{
 		TxHash:  utxo.Input.TxHash,
 		TxID:    strconv.Itoa(utxo.Input.OutputIndex),
 		Amount:  utxo.Output.Amount,
@@ -15,8 +16,8 @@ func ConvertUTxO(utxo *rmodels.UTxO) *InputUtxos {
 	}
 }
 
-func ConvertUTxOs(utxos []*rmodels.UTxO) []*InputUtxos {
-	result := make([]*InputUtxos, len(utxos))
+func ConvertUTxOs(utxos []*rmodels.UTxO) []*requests.InputUtxos {
+	result := make([]*requests.InputUtxos, len(utxos))
 	for i, utxo := range utxos {
 		result[i] = ConvertUTxO(utxo)
 	}
