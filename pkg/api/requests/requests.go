@@ -26,7 +26,7 @@ type SignInRequest struct {
 //	}
 type BuildDepositTransactionRequest struct {
 	DepositAmount []rmodels.Asset `json:"deposit_amount"`
-	InputUtxos    []*rmodels.UTxO `json:"input_utxos"`
+	InputUtxos    []rmodels.UTxO  `json:"input_utxos"`
 }
 
 type BuildWithdrawalTransactionRequest struct {

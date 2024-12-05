@@ -21,7 +21,7 @@ type Client struct {
 	BaseURL    string
 }
 
-func NewClient(apiKey string, network string, jwt string, signingKey string) *Client {
+func NewClient(apiKey, network, jwt, signingKey string) *Client {
 	cfg := config.GetConfig()
 	var networkId uint8
 	var baseURL string
@@ -29,9 +29,11 @@ func NewClient(apiKey string, network string, jwt string, signingKey string) *Cl
 	if network == "mainnet" {
 		networkId = uint8(1)
 		baseURL = "https://api-dev.deltadefi.io" // TODO: input production link once available
-	} else {
+	} else if network == "preprod" {
 		networkId = uint8(0)
 		baseURL = "https://api-dev.deltadefi.io"
+	} else {
+		panic("unsupported network")
 	}
 
 	return &Client{
@@ -124,9 +126,6 @@ func (c *Client) post(url string, body interface{}) (*http.Response, error) {
 	if err != nil {
 		return nil, err
 	}
-	if req == nil {
-		return nil, fmt.Errorf("empty request")
-	}
 
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Add("X-API-KEY", c.apiKey)
@@ -143,9 +142,6 @@ func (c *Client) delete(url string, body interface{}) (*http.Response, error) {
 	req, err := http.NewRequest("DELETE", c.BaseURL+url, bytes.NewBuffer(jsonBody))
 	if err != nil {
 		return nil, err
-	}
-	if req == nil {
-		return nil, fmt.Errorf("empty request")
 	}
 
 	req.Header.Set("Content-Type", "application/json")
