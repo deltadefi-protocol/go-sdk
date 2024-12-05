@@ -47,7 +47,7 @@ func (c *Client) getAggregatedPrice(data *requests.GetAggregatedPriceRequest) (*
 	if *data.Start == 0 && *data.End == 0 {
 		url = fmt.Sprintf("/market/aggregate/%s?interval=%s", data.Pair, data.Interval)
 	} else {
-		url = fmt.Sprintf("/market/aggregate/%s?interval=%s&start=%s&end=%s", data.Pair, data.Interval, data.Start, data.End)
+		url = fmt.Sprintf("/market/aggregate/%s?interval=%s&start=%d&end=%d", data.Pair, data.Interval, *data.Start, *data.End)
 	}
 	resp, err := c.get(url)
 	if err != nil {
