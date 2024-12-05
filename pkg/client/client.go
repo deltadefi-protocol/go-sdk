@@ -16,11 +16,12 @@ type Client struct {
 	apiKey     string
 	NetworkId  uint8
 	Jwt        string
+	SigningKey string
 	HTTPClient *http.Client
 	BaseUrl    string
 }
 
-func NewClient(apiKey string, network string, jwt string) *Client {
+func NewClient(apiKey string, network string, jwt string, signingKey string) *Client {
 	cfg := config.GetConfig()
 	var networkId uint8
 	var baseUrl string
@@ -34,9 +35,10 @@ func NewClient(apiKey string, network string, jwt string) *Client {
 	}
 
 	return &Client{
-		apiKey:    apiKey,
-		NetworkId: networkId,
-		Jwt:       jwt,
+		apiKey:     apiKey,
+		NetworkId:  networkId,
+		Jwt:        jwt,
+		SigningKey: signingKey,
 		HTTPClient: &http.Client{
 			Timeout: time.Duration(cfg.Client.Timeout) * time.Minute,
 		},
