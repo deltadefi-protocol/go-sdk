@@ -122,25 +122,11 @@ func (c *Client) CreateNewAPIKey() (*responses.GenerateNewAPIKeyResponse, error)
 }
 
 func (c *Client) BuildDepositTransaction(data *requests.BuildDepositTransactionRequest) (*responses.BuildDepositTransactionResponse, error) {
-	requestBody, err := json.Marshal(data)
+	resp, err := c.post("/accounts/deposit/build", data)
 	if err != nil {
 		return nil, err
 	}
 
-	req, err := http.NewRequest("POST", c.BaseURL+"/accounts/deposit/build", bytes.NewBuffer(requestBody))
-
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Add("X-API-KEY", c.apiKey)
-	req.Header.Set("Authorization", c.Jwt)
-
-	resp, err := c.HTTPClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
 	defer resp.Body.Close()
 
 	var buildDepositTransactionResponse responses.BuildDepositTransactionResponse
