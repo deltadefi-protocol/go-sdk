@@ -7,9 +7,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"time"
 
-	"github.com/deltadefi-protocol/go-sdk/pkg/config"
+	"github.com/deltadefi-protocol/go-sdk/pkg/api"
 )
 
 type Client struct {
@@ -21,30 +20,31 @@ type Client struct {
 	BaseURL    string
 }
 
-func NewClient(apiKey, network, jwt, signingKey string) *Client {
-	cfg := config.GetConfig()
+func NewClient(cfg api.ApiConfig, ProvidedBaseURL string) *Client {
 	var networkId uint8
 	var baseURL string
 
-	if network == "mainnet" {
+	if *cfg.Network == "mainnet" {
 		networkId = uint8(1)
 		baseURL = "https://api-dev.deltadefi.io" // TODO: input production link once available
-	} else if network == "preprod" {
+	} else if *cfg.Network == "preprod" {
 		networkId = uint8(0)
 		baseURL = "https://api-dev.deltadefi.io"
 	} else {
 		panic("unsupported network")
 	}
 
+	if (ProvidedBaseURL) != "" {
+		baseURL = ProvidedBaseURL
+	}
+
 	return &Client{
-		apiKey:     apiKey,
+		apiKey:     *cfg.APIKey,
 		NetworkId:  networkId,
-		Jwt:        jwt,
-		SigningKey: signingKey,
-		HTTPClient: &http.Client{
-			Timeout: time.Duration(cfg.Client.Timeout) * time.Minute,
-		},
-		BaseURL: baseURL,
+		Jwt:        *cfg.JWT,
+		SigningKey: *cfg.SigningKey,
+		HTTPClient: &http.Client{},
+		BaseURL:    baseURL,
 	}
 }
 
