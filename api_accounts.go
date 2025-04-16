@@ -4,19 +4,19 @@ import (
 	"encoding/json"
 )
 
-type AccountClient struct {
+type AccountsClient struct {
 	pathUrl string
 	client  *Client
 }
 
-func newAccountClient(client *Client) *AccountClient {
-	return &AccountClient{
+func newAccountsClient(client *Client) *AccountsClient {
+	return &AccountsClient{
 		pathUrl: "/accounts",
 		client:  client,
 	}
 }
 
-func (c *AccountClient) GetOperationKey() (*GetOperationKeyResponse, error) {
+func (c *AccountsClient) GetOperationKey() (*GetOperationKeyResponse, error) {
 	bodyBytes, err := c.client.get(c.pathUrl + "/operation-key")
 	if err != nil {
 		return nil, err
@@ -30,7 +30,7 @@ func (c *AccountClient) GetOperationKey() (*GetOperationKeyResponse, error) {
 	return &getOperationKeyResponse, nil
 }
 
-func (c *AccountClient) CreateNewAPIKey() (*CreateNewAPIKeyResponse, error) {
+func (c *AccountsClient) CreateNewAPIKey() (*CreateNewAPIKeyResponse, error) {
 	bodyBytes, err := c.client.get(c.pathUrl + "/new-api-key")
 	if err != nil {
 		return nil, err
@@ -44,7 +44,7 @@ func (c *AccountClient) CreateNewAPIKey() (*CreateNewAPIKeyResponse, error) {
 	return &createNewAPIKeyResponse, nil
 }
 
-func (c *AccountClient) GetDepositRecords() (*GetDepositRecordsResponse, error) {
+func (c *AccountsClient) GetDepositRecords() (*GetDepositRecordsResponse, error) {
 	bodyBytes, err := c.client.get(c.pathUrl + "/deposit-records")
 	if err != nil {
 		return nil, err
@@ -58,7 +58,7 @@ func (c *AccountClient) GetDepositRecords() (*GetDepositRecordsResponse, error) 
 	return &getDepositRecordsResponse, nil
 }
 
-func (c *AccountClient) GetWithdrawalRecords() (*GetWithdrawalRecordsResponse, error) {
+func (c *AccountsClient) GetWithdrawalRecords() (*GetWithdrawalRecordsResponse, error) {
 	bodyBytes, err := c.client.get(c.pathUrl + "/withdrawal-records")
 	if err != nil {
 		return nil, err
@@ -72,7 +72,7 @@ func (c *AccountClient) GetWithdrawalRecords() (*GetWithdrawalRecordsResponse, e
 	return &getWithdrawalRecordsResponse, nil
 }
 
-func (c *AccountClient) GetOrderRecords() (*GetOrderRecordResponse, error) {
+func (c *AccountsClient) GetOrderRecords() (*GetOrderRecordResponse, error) {
 	bodyBytes, err := c.client.get(c.pathUrl + "/order-records")
 	if err != nil {
 		return nil, err
@@ -86,7 +86,7 @@ func (c *AccountClient) GetOrderRecords() (*GetOrderRecordResponse, error) {
 	return &getOrderRecordResponse, nil
 }
 
-func (c *AccountClient) GetAccountBalance() (*GetAccountBalanceResponse, error) {
+func (c *AccountsClient) GetAccountBalance() (*GetAccountBalanceResponse, error) {
 	bodyBytes, err := c.client.get(c.pathUrl + "/balance")
 	if err != nil {
 		return nil, err
@@ -100,7 +100,7 @@ func (c *AccountClient) GetAccountBalance() (*GetAccountBalanceResponse, error) 
 	return &getAccountBalanceResponse, nil
 }
 
-func (c *AccountClient) BuildDepositTransaction(data *BuildDepositTransactionRequest) (*BuildDepositTransactionResponse, error) {
+func (c *AccountsClient) BuildDepositTransaction(data *BuildDepositTransactionRequest) (*BuildDepositTransactionResponse, error) {
 	bodyBytes, err := c.client.post(c.pathUrl+"/deposit/build", data)
 	if err != nil {
 		return nil, err
@@ -114,7 +114,7 @@ func (c *AccountClient) BuildDepositTransaction(data *BuildDepositTransactionReq
 	return &buildDepositTransactionResponse, nil
 }
 
-func (c *AccountClient) BuildWithdrawalTransaction(data *BuildWithdrawalTransactionRequest) (*BuildWithdrawalTransactionResponse, error) {
+func (c *AccountsClient) BuildWithdrawalTransaction(data *BuildWithdrawalTransactionRequest) (*BuildWithdrawalTransactionResponse, error) {
 	bodyBytes, err := c.client.post(c.pathUrl+"/withdrawal/build", data)
 	if err != nil {
 		return nil, err
@@ -128,7 +128,7 @@ func (c *AccountClient) BuildWithdrawalTransaction(data *BuildWithdrawalTransact
 	return &buildWithdrawalTransactionResponse, nil
 }
 
-func (c *AccountClient) SubmitDepositTransaction(data *SubmitDepositTransactionRequest) (*SubmitDepositTransactionResponse, error) {
+func (c *AccountsClient) SubmitDepositTransaction(data *SubmitDepositTransactionRequest) (*SubmitDepositTransactionResponse, error) {
 	bodyBytes, err := c.client.post(c.pathUrl+"/deposit/submit", data)
 	if err != nil {
 		return nil, err
@@ -142,7 +142,7 @@ func (c *AccountClient) SubmitDepositTransaction(data *SubmitDepositTransactionR
 	return &submitDepositTransactionResponse, nil
 }
 
-func (c *AccountClient) SubmitWithdrawalTransaction(data *SubmitWithdrawalTransactionRequest) (*SubmitWithdrawalTransactionResponse, error) {
+func (c *AccountsClient) SubmitWithdrawalTransaction(data *SubmitWithdrawalTransactionRequest) (*SubmitWithdrawalTransactionResponse, error) {
 	bodyBytes, err := c.client.post(c.pathUrl+"/withdrawal/submit", data)
 	if err != nil {
 		return nil, err

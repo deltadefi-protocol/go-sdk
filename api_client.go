@@ -10,17 +10,19 @@ import (
 )
 
 type DeltaDeFi struct {
-	Account *AccountClient
-	App     *AppClient
-	Market  *MarketClient
+	Accounts *AccountsClient
+	App      *AppClient
+	Market   *MarketClient
+	Order    *OrderClient
 }
 
 func NewDeltaDeFi(cfg ApiConfig) *DeltaDeFi {
 	client := newClient(cfg)
 	return &DeltaDeFi{
-		Account: newAccountClient(client),
-		App:     newAppClient(client),
-		Market:  newMarketClient(client),
+		Accounts: newAccountsClient(client),
+		App:      newAppClient(client),
+		Market:   newMarketClient(client),
+		Order:    newOrderClient(client),
 	}
 }
 
@@ -115,7 +117,7 @@ func (c *Client) post(url string, body interface{}) ([]byte, error) {
 	return bodyBytes, nil
 }
 
-func (c *Client) delete(url string, body interface{}) (*http.Response, error) {
+func (c *Client) delete(url string, body interface{}) ([]byte, error) {
 	jsonBody, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
@@ -128,5 +130,16 @@ func (c *Client) delete(url string, body interface{}) (*http.Response, error) {
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Add("X-API-KEY", c.ApiKey)
 
-	return c.HTTPClient.Do(req)
+	resp, err := c.HTTPClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	return bodyBytes, nil
 }

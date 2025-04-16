@@ -104,7 +104,7 @@ type BuildCancelOrderTransactionResponse struct {
 }
 
 type SubmitPlaceOrderTransactionResponse struct {
-	Order *OrderJSON `json:"order"`
+	Order OrderJSON `json:"order"`
 }
 
 type SubmitCancelOrderTransactionResponse struct {

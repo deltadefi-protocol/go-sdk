@@ -1,68 +1,73 @@
 package deltadefi
 
-// func (c *Client) buildPlaceOrderTransaction(data *BuildPlaceOrderTransactionRequest) (*BuildPlaceOrderTransactionResponse, error) {
-// 	resp, err := c.post("/order/build", data)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	defer resp.Body.Close()
+import (
+	"encoding/json"
+)
 
-// 	var buildPlaceOrderTransactionResponse BuildPlaceOrderTransactionResponse
-// 	err = json.NewDecoder(resp.Body).Decode(&buildPlaceOrderTransactionResponse)
-// 	if err != nil {
-// 		return nil, err
-// 	}
+type OrderClient struct {
+	pathUrl string
+	client  *Client
+}
 
-// 	return &buildPlaceOrderTransactionResponse, nil
-// }
+func newOrderClient(client *Client) *OrderClient {
+	return &OrderClient{
+		pathUrl: "/order",
+		client:  client,
+	}
+}
 
-// func (c *Client) buildCancelOrderTransaction(orderId string) (*BuildCancelOrderTransactionResponse, error) {
-// 	url := fmt.Sprintf("/order/%s/build", orderId)
-// 	var empty interface{}
-// 	resp, err := c.delete(url, empty)
+func (c *OrderClient) BuildPlaceOrderTransaction(data *BuildPlaceOrderTransactionRequest) (*BuildPlaceOrderTransactionResponse, error) {
+	bodyBytes, err := c.client.post(c.pathUrl+"/build", data)
+	if err != nil {
+		return nil, err
+	}
 
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	defer resp.Body.Close()
+	var buildPlaceOrderTransactionResponse BuildPlaceOrderTransactionResponse
+	err = json.Unmarshal(bodyBytes, &buildPlaceOrderTransactionResponse)
+	if err != nil {
+		return nil, err
+	}
+	return &buildPlaceOrderTransactionResponse, nil
+}
 
-// 	var buildCancelOrderTransactionResponse BuildCancelOrderTransactionResponse
-// 	err = json.NewDecoder(resp.Body).Decode(&buildCancelOrderTransactionResponse)
-// 	if err != nil {
-// 		return nil, err
-// 	}
+func (c *OrderClient) BuildCancelOrderTransaction(orderId string) (*BuildCancelOrderTransactionResponse, error) {
+	bodyBytes, err := c.client.delete(c.pathUrl+orderId+"/build", nil)
+	if err != nil {
+		return nil, err
+	}
 
-// 	return &buildCancelOrderTransactionResponse, nil
-// }
+	var buildCancelOrderTransactionResponse BuildCancelOrderTransactionResponse
+	err = json.Unmarshal(bodyBytes, &buildCancelOrderTransactionResponse)
+	if err != nil {
+		return nil, err
+	}
+	return &buildCancelOrderTransactionResponse, nil
+}
 
-// func (c *Client) submitPlaceOrderTransactionRequest(data *SubmitPlaceOrderTransactionRequest) (*SubmitPlaceOrderTransactionResponse, error) {
-// 	resp, err := c.post("/order/submit", data)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	defer resp.Body.Close()
+func (c *OrderClient) SubmitPlaceOrderTransactionRequest(data *SubmitPlaceOrderTransactionRequest) (*SubmitPlaceOrderTransactionResponse, error) {
+	bodyBytes, err := c.client.post(c.pathUrl+"/submit", data)
+	if err != nil {
+		return nil, err
+	}
 
-// 	var submitPlaceOrderTransactionResponse SubmitPlaceOrderTransactionResponse
-// 	err = json.NewDecoder(resp.Body).Decode(&submitPlaceOrderTransactionResponse)
-// 	if err != nil {
-// 		return nil, err
-// 	}
+	var submitPlaceOrderTransactionResponse SubmitPlaceOrderTransactionResponse
+	err = json.Unmarshal(bodyBytes, &submitPlaceOrderTransactionResponse)
+	if err != nil {
+		return nil, err
+	}
+	return &submitPlaceOrderTransactionResponse, nil
+}
 
-// 	return &submitPlaceOrderTransactionResponse, nil
-// }
+func (c *OrderClient) SubmitCancelOrderTransactionRequest(data *SubmitCancelOrderTransactionRequest) (*SubmitCancelOrderTransactionResponse, error) {
+	bodyBytes, err := c.client.delete(c.pathUrl+"/submit", data)
+	if err != nil {
+		return nil, err
+	}
 
-// func (c *Client) submitCancelOrderTransactionRequest(data *SubmitCancelOrderTransactionRequest) (*SubmitCancelOrderTransactionResponse, error) {
-// 	resp, err := c.delete("/order/submit", data)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	defer resp.Body.Close()
-
-// 	var submitCancelOrderTransactionResponse SubmitCancelOrderTransactionResponse
-// 	err = json.NewDecoder(resp.Body).Decode(&submitCancelOrderTransactionResponse)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	return &submitCancelOrderTransactionResponse, nil
-// }
+	var submitCancelOrderTransactionResponse SubmitCancelOrderTransactionResponse
+	err = json.Unmarshal(bodyBytes, &submitCancelOrderTransactionResponse)
+	if err != nil {
+		return nil, err
+	}
+	return &submitCancelOrderTransactionResponse, nil
+}

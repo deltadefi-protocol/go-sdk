@@ -58,14 +58,15 @@ type GetAggregatedPriceRequest struct {
 	End      int64    `json:"end"`
 }
 
-// type BuildPlaceOrderTransactionRequest struct {
-// 	Pair       TradingSymbol `json:"pair"`
-// 	Side       OrderSide     `json:"side"`
-// 	Type       OrderType     `json:"type"`
-// 	Quantity   float64       `json:"quantity"`
-// 	Price      *float64      `json:"price,omitempty"`
-// 	BasisPoint *float64      `json:"basis_point,omitempty"`
-// }
+type BuildPlaceOrderTransactionRequest struct {
+	Symbol                string    `json:"symbol"`
+	Side                  OrderSide `json:"side"`
+	Type                  OrderType `json:"type"`
+	Quantity              float64   `json:"quantity"`
+	Price                 float64   `json:"price"`
+	LimitSlippage         bool      `json:"limit_slippage"`
+	MaxSlippageBasisPoint bool      `json:"max_slippage_basis_point"`
+}
 
 type SubmitPlaceOrderTransactionRequest struct {
 	OrderID  string `json:"order_id"`
