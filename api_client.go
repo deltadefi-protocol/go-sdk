@@ -11,12 +11,14 @@ import (
 
 type DeltaDeFi struct {
 	Account *AccountClient
+	App     *AppClient
 }
 
 func NewDeltaDeFi(cfg ApiConfig) *DeltaDeFi {
 	client := newClient(cfg)
 	return &DeltaDeFi{
 		Account: newAccountClient(client),
+		App:     newAppClient(client),
 	}
 }
 
@@ -57,48 +59,6 @@ func newClient(cfg ApiConfig) *Client {
 		BaseURL: baseURL,
 	}
 }
-
-// func (c *Client) sendRequest(req *http.Request, responseBody *string) error {
-// 	if req == nil {
-// 		return fmt.Errorf("empty request")
-// 	}
-
-// 	req.Header.Set("Content-Type", "application/json")
-// 	req.Header.Add("X-API-KEY", c.apiKey)
-
-// 	if c.HTTPClient == nil {
-// 		return fmt.Errorf("missing http client")
-// 	}
-// 	resp, err := c.HTTPClient.Do(req)
-
-// 	if err != nil {
-// 		return err
-// 	}
-// 	if resp == nil {
-// 		return fmt.Errorf("empty response")
-// 	}
-
-// 	// Try to unmarshall into errorResponse
-// 	if resp.StatusCode != http.StatusOK {
-// 		var errRes errorResponse
-// 		if err = json.NewDecoder(resp.Body).Decode(&errRes); err == nil {
-// 			return errors.New(errRes.Message)
-// 		}
-
-// 		return fmt.Errorf("unknown error, status code: %d", resp.StatusCode)
-// 	}
-
-// 	respBodyBytes, err := io.ReadAll(resp.Body)
-
-// 	if err != nil {
-// 		return fmt.Errorf("failed to read body: %s", err)
-// 	}
-// 	defer resp.Body.Close()
-
-// 	*responseBody = string(respBodyBytes)
-
-// 	return nil
-// }
 
 func (c *Client) get(url string) ([]byte, error) {
 	req, err := http.NewRequest("GET", c.BaseURL+url, nil)

@@ -68,10 +68,6 @@ type SubmitWithdrawalTransactionResponse struct {
 	TxHash string `json:"tx_hash"`
 }
 
-type GetTermsAndConditionResponse struct {
-	Value string `json:"value"`
-}
-
 type MarketDepth struct {
 	Price    float64 `json:"price"`
 	Quantity float64 `json:"quantity"`

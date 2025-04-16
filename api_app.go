@@ -1,17 +1,31 @@
 package deltadefi
 
-// func (c *Client) GetTermsAndConditions() (*GetTermsAndConditionResponse, error) {
-// 	resp, err := c.get("/terms-and-conditions")
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	defer resp.Body.Close()
+type AppClient struct {
+	pathUrl string
+	client  *Client
+}
 
-// 	var getTermsAndConditionResponse GetTermsAndConditionResponse
-// 	err = json.NewDecoder(resp.Body).Decode(&getTermsAndConditionResponse)
-// 	if err != nil {
-// 		return nil, err
-// 	}
+func newAppClient(client *Client) *AppClient {
+	return &AppClient{
+		pathUrl: "/app",
+		client:  client,
+	}
+}
 
-// 	return &getTermsAndConditionResponse, nil
-// }
+func (c *AppClient) GetTermsAndConditions() (interface{}, error) {
+	bodyBytes, err := c.client.get(c.pathUrl + "/terms-and-conditions")
+	if err != nil {
+		return nil, err
+	}
+
+	return &bodyBytes, nil
+}
+
+func (c *AppClient) GetHydraCycle() (interface{}, error) {
+	bodyBytes, err := c.client.get(c.pathUrl + "/hydra-cycle")
+	if err != nil {
+		return nil, err
+	}
+
+	return &bodyBytes, nil
+}

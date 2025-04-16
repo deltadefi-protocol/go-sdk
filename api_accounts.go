@@ -22,13 +22,11 @@ func (c *AccountClient) GetOperationKey() (*GetOperationKeyResponse, error) {
 		return nil, err
 	}
 
-	// Decode the JSON from the byte slice
 	var getOperationKeyResponse GetOperationKeyResponse
 	err = json.Unmarshal(bodyBytes, &getOperationKeyResponse)
 	if err != nil {
 		return nil, err
 	}
-
 	return &getOperationKeyResponse, nil
 }
 
