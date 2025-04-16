@@ -1,8 +1,7 @@
-package requests
+package deltadefi
 
 import (
-	"github.com/deltadefi-protocol/go-sdk/pkg/models"
-	rmodels "github.com/sidan-lab/rum/models"
+	"github.com/sidan-lab/rum/models"
 )
 
 type SignInRequest struct {
@@ -11,8 +10,8 @@ type SignInRequest struct {
 }
 
 // type BuildSendRefScriptsTransactionRequest struct {
-// 	InputUTxOs         []rmodels.UTxO  `json:"input_utxos"`
-// 	TotalDepositAmount []rmodels.Asset `json:"total_deposit_amount"`
+// 	InputUTxOs         []models.UTxO  `json:"input_utxos"`
+// 	TotalDepositAmount []models.Asset `json:"total_deposit_amount"`
 // }
 
 // type SubmitSendRefScriptsTransactionRequest struct {
@@ -25,12 +24,12 @@ type SignInRequest struct {
 //		SignedTx string `json:"signed_tx"`
 //	}
 type BuildDepositTransactionRequest struct {
-	DepositAmount []rmodels.Asset `json:"deposit_amount"`
-	InputUtxos    []rmodels.UTxO  `json:"input_utxos"`
+	DepositAmount []models.Asset `json:"deposit_amount"`
+	InputUtxos    []models.UTxO  `json:"input_utxos"`
 }
 
 type BuildWithdrawalTransactionRequest struct {
-	WithdrawalAmount []rmodels.Asset `json:"withdrawal_amount"`
+	WithdrawalAmount []models.Asset `json:"withdrawal_amount"`
 }
 
 type SubmitDepositTransactionRequest struct {
@@ -38,12 +37,12 @@ type SubmitDepositTransactionRequest struct {
 }
 
 type SubmitWithdrawalTransactionRequest struct {
-	SignedTxs []string `json:"signed_txs"`
+	SignedTx string `json:"signed_tx"`
 }
 
-type GetMarketDepthRequest struct {
-	Pair models.TradingSymbol `json:"pair"`
-}
+// type GetMarketDepthRequest struct {
+// 	Pair TradingSymbol `json:"pair"`
+// }
 
 type GetMarketPriceRequest struct {
 	Pair string `json:"pair"`
@@ -67,14 +66,14 @@ type GetAggregatedPriceRequest struct {
 	End      *int64   `json:"end,omitempty"`   // timestamp
 }
 
-type BuildPlaceOrderTransactionRequest struct {
-	Pair       models.TradingSymbol `json:"pair"`
-	Side       models.OrderSide     `json:"side"`
-	Type       models.OrderType     `json:"type"`
-	Quantity   float64              `json:"quantity"`
-	Price      *float64             `json:"price,omitempty"`
-	BasisPoint *float64             `json:"basis_point,omitempty"`
-}
+// type BuildPlaceOrderTransactionRequest struct {
+// 	Pair       TradingSymbol `json:"pair"`
+// 	Side       OrderSide     `json:"side"`
+// 	Type       OrderType     `json:"type"`
+// 	Quantity   float64       `json:"quantity"`
+// 	Price      *float64      `json:"price,omitempty"`
+// 	BasisPoint *float64      `json:"basis_point,omitempty"`
+// }
 
 type SubmitPlaceOrderTransactionRequest struct {
 	OrderID  string `json:"order_id"`

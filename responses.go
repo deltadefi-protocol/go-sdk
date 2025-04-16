@@ -1,13 +1,8 @@
-package responses
+package deltadefi
 
-import (
-	"github.com/deltadefi-protocol/go-sdk/pkg/models"
-	rmodels "github.com/sidan-lab/rum/models"
-)
-
-type SignInResponse struct {
-	Token   string `json:"token"`
-	IsReady bool   `json:"is_ready"`
+type GetOperationKeyResponse struct {
+	EncryptedOperationKey string `json:"encrypted_operation_key"`
+	OperationKeyHash      string `json:"operation_key_hash"`
 }
 
 type BuildSendRefScriptsTransactionResponse struct {
@@ -18,30 +13,32 @@ type SubmitSendRefScriptsTransactionResponse struct {
 	TxHash string `json:"tx_hash"`
 }
 type SubmitPostOrderTransactionResponse struct {
-	Order   *models.OrderJSON `json:"order"`
-	TxHexes string            `json:"tx_hexes"`
+	Order   *OrderJSON `json:"order"`
+	TxHexes string     `json:"tx_hexes"`
 }
 
 type PostOrderResponse = *SubmitPostOrderTransactionResponse
 
 type DepositRecord struct {
-	CreatedAt string          `json:"created_at"`
-	Assets    []rmodels.Asset `json:"assets"`
-	TxHash    string          `json:"tx_hash"`
+	CreatedAt string            `json:"created_at"`
+	Status    TransactionStatus `json:"status"`
+	Assets    []Asset           `json:"assets"`
+	TxHash    string            `json:"tx_hash"`
 }
 
-type GetDepositRecordsResponse []*DepositRecord
+type GetDepositRecordsResponse []DepositRecord
 
 type GetOrderRecordResponse struct {
-	Orders []*models.OrderJSON `json:"Orders"`
+	Orders []OrderJSON `json:"orders"`
 }
 
 type WithdrawalRecord struct {
-	CreatedAt string          `json:"created_at"`
-	Assets    []rmodels.Asset `json:"assets"`
+	CreatedAt string            `json:"created_at"`
+	Status    TransactionStatus `json:"status"`
+	Assets    []Asset           `json:"assets"`
 }
 
-type GetWithdrawalRecordsResponse []*WithdrawalRecord
+type GetWithdrawalRecordsResponse []WithdrawalRecord
 
 type AssetBalance struct {
 	Asset  string `json:"asset"`
@@ -49,9 +46,9 @@ type AssetBalance struct {
 	Locked int64  `json:"locked"`
 }
 
-type GetAccountBalanceResponse []*AssetBalance
+type GetAccountBalanceResponse []AssetBalance
 
-type GenerateNewAPIKeyResponse struct {
+type CreateNewAPIKeyResponse struct {
 	APIKey string `json:"api_key"`
 }
 
@@ -111,7 +108,7 @@ type BuildCancelOrderTransactionResponse struct {
 }
 
 type SubmitPlaceOrderTransactionResponse struct {
-	Order *models.OrderJSON `json:"order"`
+	Order *OrderJSON `json:"order"`
 }
 
 type SubmitCancelOrderTransactionResponse struct {
