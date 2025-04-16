@@ -92,7 +92,7 @@ type Trade struct {
 	Volume float64 `json:"volume"`
 }
 
-type GetAggregatedPriceResponse []*Trade
+type GetAggregatedPriceResponse []Trade
 
 type BuildPlaceOrderTransactionResponse struct {
 	OrderID string `json:"order_id"`

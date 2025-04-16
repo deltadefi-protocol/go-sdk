@@ -40,14 +40,6 @@ type SubmitWithdrawalTransactionRequest struct {
 	SignedTx string `json:"signed_tx"`
 }
 
-// type GetMarketDepthRequest struct {
-// 	Pair TradingSymbol `json:"pair"`
-// }
-
-type GetMarketPriceRequest struct {
-	Pair string `json:"pair"`
-}
-
 type Interval string
 
 const (
@@ -60,10 +52,10 @@ const (
 )
 
 type GetAggregatedPriceRequest struct {
-	Pair     string   `json:"pair"`
+	Symbol   string   `json:"symbol"`
 	Interval Interval `json:"interval"`
-	Start    *int64   `json:"start,omitempty"` // timestamp
-	End      *int64   `json:"end,omitempty"`   // timestamp
+	Start    int64    `json:"start"`
+	End      int64    `json:"end"`
 }
 
 // type BuildPlaceOrderTransactionRequest struct {

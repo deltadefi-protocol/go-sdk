@@ -12,6 +12,7 @@ import (
 type DeltaDeFi struct {
 	Account *AccountClient
 	App     *AppClient
+	Market  *MarketClient
 }
 
 func NewDeltaDeFi(cfg ApiConfig) *DeltaDeFi {
@@ -19,6 +20,7 @@ func NewDeltaDeFi(cfg ApiConfig) *DeltaDeFi {
 	return &DeltaDeFi{
 		Account: newAccountClient(client),
 		App:     newAppClient(client),
+		Market:  newMarketClient(client),
 	}
 }
 
