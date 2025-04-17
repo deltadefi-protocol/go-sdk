@@ -1,8 +1,6 @@
 package deltadefi
 
-import (
-	"github.com/sidan-lab/rum/models"
-)
+import "github.com/sidan-lab/rum"
 
 type SignInRequest struct {
 	WalletAddress string `json:"wallet_address"`
@@ -10,8 +8,8 @@ type SignInRequest struct {
 }
 
 // type BuildSendRefScriptsTransactionRequest struct {
-// 	InputUTxOs         []models.UTxO  `json:"input_utxos"`
-// 	TotalDepositAmount []models.Asset `json:"total_deposit_amount"`
+// 	InputUTxOs         []rum.UTxO  `json:"input_utxos"`
+// 	TotalDepositAmount []rum.Asset `json:"total_deposit_amount"`
 // }
 
 // type SubmitSendRefScriptsTransactionRequest struct {
@@ -24,12 +22,12 @@ type SignInRequest struct {
 //		SignedTx string `json:"signed_tx"`
 //	}
 type BuildDepositTransactionRequest struct {
-	DepositAmount []models.Asset `json:"deposit_amount"`
-	InputUtxos    []models.UTxO  `json:"input_utxos"`
+	DepositAmount []rum.Asset `json:"deposit_amount"`
+	InputUtxos    []rum.UTxO  `json:"input_utxos"`
 }
 
 type BuildWithdrawalTransactionRequest struct {
-	WithdrawalAmount []models.Asset `json:"withdrawal_amount"`
+	WithdrawalAmount []rum.Asset `json:"withdrawal_amount"`
 }
 
 type SubmitDepositTransactionRequest struct {
