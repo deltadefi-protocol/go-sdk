@@ -28,8 +28,10 @@ type DepositRecord struct {
 
 type GetDepositRecordsResponse []DepositRecord
 
+// GetOrderRecordResponse represents the response from the get order records endpoint.
 type GetOrderRecordResponse struct {
-	Orders []OrderJSON `json:"orders"`
+	Orders              []OrderJSON              `json:"orders"`
+	OrderFillingRecords []OrderFillingRecordJSON `json:"order_filling_records"`
 }
 
 type WithdrawalRecord struct {
@@ -60,11 +62,19 @@ type BuildWithdrawalTransactionResponse struct {
 	TxHex string `json:"tx_hex"`
 }
 
+type BuildTransferalTransactionResponse struct {
+	TxHex string `json:"tx_hex"`
+}
+
 type SubmitDepositTransactionResponse struct {
 	TxHash string `json:"tx_hash"`
 }
 
 type SubmitWithdrawalTransactionResponse struct {
+	TxHash string `json:"tx_hash"`
+}
+
+type SubmitTransferalTransactionResponse struct {
 	TxHash string `json:"tx_hash"`
 }
 

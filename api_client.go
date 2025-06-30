@@ -90,6 +90,43 @@ func (c *Client) get(url string) ([]byte, error) {
 	return bodyBytes, nil
 }
 
+func (c *Client) getWithParams(path string, params map[string]string) ([]byte, error) {
+	req, err := http.NewRequest("GET", c.BaseURL+path, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	// Add query parameters
+	q := req.URL.Query()
+	for key, value := range params {
+		q.Add(key, value)
+	}
+	req.URL.RawQuery = q.Encode()
+
+	// Add headers
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Add("X-API-KEY", c.ApiKey)
+
+	resp, err := c.HTTPClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	// Read response body
+	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	// Check if the response status code is not 2xx
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		return nil, fmt.Errorf("API error: %s, status code: %d", string(bodyBytes), resp.StatusCode)
+	}
+
+	return bodyBytes, nil
+}
+
 func (c *Client) post(url string, body interface{}) ([]byte, error) {
 	jsonBody, err := json.Marshal(body)
 	if err != nil {

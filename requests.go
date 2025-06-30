@@ -30,11 +30,20 @@ type BuildWithdrawalTransactionRequest struct {
 	WithdrawalAmount []rum.Asset `json:"withdrawal_amount"`
 }
 
+type BuildTransferalTransactionRequest struct {
+	TransferalAmount []rum.Asset `json:"transferal_amount"`
+	ToAddress        string      `json:"to_address"`
+}
+
 type SubmitDepositTransactionRequest struct {
 	SignedTx string `json:"signed_tx"`
 }
 
 type SubmitWithdrawalTransactionRequest struct {
+	SignedTx string `json:"signed_tx"`
+}
+
+type SubmitTransferalTransactionRequest struct {
 	SignedTx string `json:"signed_tx"`
 }
 

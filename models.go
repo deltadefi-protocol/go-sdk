@@ -26,20 +26,21 @@ const (
 )
 
 type OrderJSON struct {
-	OrderID       string                      `json:"order_id"`
-	Status        OrderStatus                 `json:"status"`
-	Symbol        string                      `json:"symbol"`
-	OrigQty       string                      `json:"orig_qty"`
-	ExecutedQty   string                      `json:"executed_qty"`
-	Side          OrderSide                   `json:"side"`
-	Price         float64                     `json:"price"`
-	Type          OrderType                   `json:"type"`
-	FeeCharged    string                      `json:"fee_charged"`
-	ExecutedPrice float64                     `json:"executed_price"`
-	Slippage      string                      `json:"slippage"`
-	CreateTime    int64                       `json:"create_time"`
-	UpdateTime    int64                       `json:"update_time"`
-	Fills         *[]OrderExecutionRecordJSON `json:"fills"`
+	OrderID       string                     `json:"order_id"`
+	Status        string                     `json:"status"` // Changed from OrderStatus to string
+	Symbol        string                     `json:"symbol"`
+	OrigQty       string                     `json:"orig_qty"`
+	ExecutedQty   string                     `json:"executed_qty"`
+	Side          OrderSide                  `json:"side"`
+	Price         float64                    `json:"price"`
+	Type          OrderType                  `json:"type"`
+	FeeCharged    string                     `json:"fee_charged"`
+	FeeUnit       string                     `json:"fee_unit"` // Added FeeUnit field
+	ExecutedPrice float64                    `json:"executed_price"`
+	Slippage      string                     `json:"slippage"`
+	CreatedTime   uint64                     `json:"create_time"`     // Changed from CreateTime (int64) to CreatedTime (uint64)
+	UpdateTime    uint64                     `json:"update_time"`     // Changed from int64 to uint64
+	Fills         []OrderExecutionRecordJSON `json:"fills,omitempty"` // Changed from *[]OrderExecutionRecordJSON to []OrderExecutionRecordJSON
 }
 
 // TransactionStatus represents the transaction statuses.
@@ -78,4 +79,35 @@ type OrderExecutionRecordJSON struct {
 	Role                OrderExecutionRole `json:"role"`
 	CounterPartyOrderID string             `json:"counter_party_order_id"`
 	CreateTime          int64              `json:"create_time"`
+}
+
+// OrderFillingRecordJSON represents an order filling record in JSON format.
+type OrderFillingRecordJSON struct {
+	ExecutionID   string    `json:"execution_id"`
+	OrderID       string    `json:"order_id"`
+	Status        string    `json:"status"`
+	Symbol        string    `json:"symbol"`
+	ExecutedQty   string    `json:"executed_qty"`
+	Side          OrderSide `json:"side"`
+	Type          OrderType `json:"type"`
+	FeeCharged    string    `json:"fee_charged"`
+	FeeUnit       string    `json:"fee_unit"`
+	ExecutedPrice float64   `json:"executed_price"`
+	CreatedTime   uint64    `json:"create_time"`
+}
+
+// OrderRecordStatus represents the status filter for order records
+type OrderRecordStatus string
+
+const (
+	OrderRecordStatusOpenOrder      OrderRecordStatus = "openOrder"
+	OrderRecordStatusOrderHistory   OrderRecordStatus = "orderHistory"
+	OrderRecordStatusTradingHistory OrderRecordStatus = "tradingHistory"
+)
+
+// GetOrderRecordRequest represents the request parameters for fetching order records
+type GetOrderRecordRequest struct {
+	Status OrderRecordStatus `json:"status"`          // Must be either 'openOrder', 'orderHistory', or 'tradingHistory'
+	Limit  int               `json:"limit,omitempty"` // Default is 10, must be between 1 and 250
+	Page   int               `json:"page,omitempty"`  // Default is 1, must be between 1 and 1000
 }

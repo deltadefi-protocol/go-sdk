@@ -2,6 +2,7 @@ package deltadefi
 
 import (
 	"encoding/json"
+	"strconv"
 )
 
 type AccountsClient struct {
@@ -72,8 +73,22 @@ func (c *AccountsClient) GetWithdrawalRecords() (*GetWithdrawalRecordsResponse, 
 	return &getWithdrawalRecordsResponse, nil
 }
 
-func (c *AccountsClient) GetOrderRecords() (*GetOrderRecordResponse, error) {
-	bodyBytes, err := c.client.get(c.pathUrl + "/order-records")
+// GetOrderRecords retrieves order records based on the specified status and pagination parameters.
+func (c *AccountsClient) GetOrderRecords(data *GetOrderRecordRequest) (*GetOrderRecordResponse, error) {
+	// Build query parameters
+	params := make(map[string]string)
+	params["status"] = string(data.Status)
+
+	if data.Limit > 0 {
+		params["limit"] = strconv.Itoa(data.Limit)
+	}
+
+	if data.Page > 0 {
+		params["page"] = strconv.Itoa(data.Page)
+	}
+
+	// Get request with query parameters
+	bodyBytes, err := c.client.getWithParams(c.pathUrl+"/order-records", params)
 	if err != nil {
 		return nil, err
 	}
@@ -128,6 +143,20 @@ func (c *AccountsClient) BuildWithdrawalTransaction(data *BuildWithdrawalTransac
 	return &buildWithdrawalTransactionResponse, nil
 }
 
+func (c *AccountsClient) BuildTransferalTransaction(data *BuildTransferalTransactionRequest) (*BuildTransferalTransactionResponse, error) {
+	bodyBytes, err := c.client.post(c.pathUrl+"/transferal/build", data)
+	if err != nil {
+		return nil, err
+	}
+
+	var buildTransferalTransactionResponse BuildTransferalTransactionResponse
+	err = json.Unmarshal(bodyBytes, &buildTransferalTransactionResponse)
+	if err != nil {
+		return nil, err
+	}
+	return &buildTransferalTransactionResponse, nil
+}
+
 func (c *AccountsClient) SubmitDepositTransaction(data *SubmitDepositTransactionRequest) (*SubmitDepositTransactionResponse, error) {
 	bodyBytes, err := c.client.post(c.pathUrl+"/deposit/submit", data)
 	if err != nil {
@@ -154,4 +183,18 @@ func (c *AccountsClient) SubmitWithdrawalTransaction(data *SubmitWithdrawalTrans
 		return nil, err
 	}
 	return &submitWithdrawalTransactionResponse, nil
+}
+
+func (c *AccountsClient) SubmitTransferalTransaction(data *SubmitTransferalTransactionRequest) (*SubmitTransferalTransactionResponse, error) {
+	bodyBytes, err := c.client.post(c.pathUrl+"/transferal/submit", data)
+	if err != nil {
+		return nil, err
+	}
+
+	var submitTransferalTransactionResponse SubmitTransferalTransactionResponse
+	err = json.Unmarshal(bodyBytes, &submitTransferalTransactionResponse)
+	if err != nil {
+		return nil, err
+	}
+	return &submitTransferalTransactionResponse, nil
 }
