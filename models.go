@@ -25,10 +25,16 @@ const (
 	OrderTypeLimit  OrderType = "limit"
 )
 
+type Symbol string
+
+const (
+	ADAUSDM Symbol = "ADAUSDM"
+)
+
 type OrderJSON struct {
 	OrderID       string                     `json:"order_id"`
 	Status        string                     `json:"status"` // Changed from OrderStatus to string
-	Symbol        string                     `json:"symbol"`
+	Symbol        Symbol                     `json:"symbol"`
 	OrigQty       string                     `json:"orig_qty"`
 	ExecutedQty   string                     `json:"executed_qty"`
 	Side          OrderSide                  `json:"side"`
@@ -55,9 +61,9 @@ const (
 )
 
 type Asset struct {
-	Asset     string `json:"asset"`
-	AssetUnit string `json:"asset_unit"`
-	Qty       int64  `json:"qty"`
+	Asset     string  `json:"asset"`
+	AssetUnit string  `json:"asset_unit"`
+	Qty       float64 `json:"qty"`
 }
 
 // OrderExecutionRole represents the role in an order execution.
@@ -86,7 +92,7 @@ type OrderFillingRecordJSON struct {
 	ExecutionID   string    `json:"execution_id"`
 	OrderID       string    `json:"order_id"`
 	Status        string    `json:"status"`
-	Symbol        string    `json:"symbol"`
+	Symbol        Symbol    `json:"symbol"`
 	ExecutedQty   string    `json:"executed_qty"`
 	Side          OrderSide `json:"side"`
 	Type          OrderType `json:"type"`
@@ -107,7 +113,8 @@ const (
 
 // GetOrderRecordRequest represents the request parameters for fetching order records
 type GetOrderRecordRequest struct {
-	Status OrderRecordStatus `json:"status"`          // Must be either 'openOrder', 'orderHistory', or 'tradingHistory'
-	Limit  int               `json:"limit,omitempty"` // Default is 10, must be between 1 and 250
-	Page   int               `json:"page,omitempty"`  // Default is 1, must be between 1 and 1000
+	Status OrderRecordStatus `json:"status"`           // Must be either 'openOrder', 'orderHistory', or 'tradingHistory'
+	Limit  int               `json:"limit,omitempty"`  // Default is 10, must be between 1 and 250
+	Page   int               `json:"page,omitempty"`   // Default is 1, must be between 1 and 1000
+	Symbol Symbol            `json:"symbol,omitempty"` // Optional filter by symbol, e.g., ADAUSDM
 }

@@ -74,7 +74,7 @@ func (c *AccountsClient) GetWithdrawalRecords() (*GetWithdrawalRecordsResponse, 
 }
 
 // GetOrderRecords retrieves order records based on the specified status and pagination parameters.
-func (c *AccountsClient) GetOrderRecords(data *GetOrderRecordRequest) (*GetOrderRecordResponse, error) {
+func (c *AccountsClient) GetOrderRecords(data *GetOrderRecordRequest) (*GetOrderRecordsResponse, error) {
 	// Build query parameters
 	params := make(map[string]string)
 	params["status"] = string(data.Status)
@@ -87,18 +87,22 @@ func (c *AccountsClient) GetOrderRecords(data *GetOrderRecordRequest) (*GetOrder
 		params["page"] = strconv.Itoa(data.Page)
 	}
 
+	if data.Symbol != "" {
+		params["symbol"] = string(data.Symbol)
+	}
+
 	// Get request with query parameters
 	bodyBytes, err := c.client.getWithParams(c.pathUrl+"/order-records", params)
 	if err != nil {
 		return nil, err
 	}
 
-	var getOrderRecordResponse GetOrderRecordResponse
-	err = json.Unmarshal(bodyBytes, &getOrderRecordResponse)
+	var getOrderRecordsResponse GetOrderRecordsResponse
+	err = json.Unmarshal(bodyBytes, &getOrderRecordsResponse)
 	if err != nil {
 		return nil, err
 	}
-	return &getOrderRecordResponse, nil
+	return &getOrderRecordsResponse, nil
 }
 
 func (c *AccountsClient) GetAccountBalance() (*GetAccountBalanceResponse, error) {

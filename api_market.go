@@ -17,20 +17,6 @@ func newMarketClient(client *Client) *MarketClient {
 	}
 }
 
-func (c *MarketClient) GetDepth(symbol string) (*GetMarketDepthResponse, error) {
-	bodyBytes, err := c.client.get(c.pathUrl + "/depth?symbol=" + symbol)
-	if err != nil {
-		return nil, err
-	}
-
-	var getMarketDepthResponse GetMarketDepthResponse
-	err = json.Unmarshal(bodyBytes, &getMarketDepthResponse)
-	if err != nil {
-		return nil, err
-	}
-	return &getMarketDepthResponse, nil
-}
-
 func (c *MarketClient) GetMarketPrice(symbol string) (*GetMarketPriceResponse, error) {
 	bodyBytes, err := c.client.get(c.pathUrl + "/market-price?symbol=" + symbol)
 	if err != nil {
@@ -46,9 +32,9 @@ func (c *MarketClient) GetMarketPrice(symbol string) (*GetMarketPriceResponse, e
 }
 
 func (c *MarketClient) GetAggregatedPrice(data *GetAggregatedPriceRequest) (*GetAggregatedPriceResponse, error) {
-	bodyBytes, err := c.client.get(
-		c.pathUrl + "/aggregated-trade/" + data.Symbol + "?interval=" + string(data.Interval) +
-			"&start=" + fmt.Sprint(data.Start) + "&end=" + fmt.Sprint(data.End))
+	fullPath := c.pathUrl + "/graph/" + data.Symbol + "?interval=" + string(data.Interval) +
+		"&start=" + fmt.Sprint(data.Start) + "&end=" + fmt.Sprint(data.End)
+	bodyBytes, err := c.client.get(fullPath)
 	if err != nil {
 		return nil, err
 	}

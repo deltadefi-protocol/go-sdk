@@ -28,10 +28,17 @@ type DepositRecord struct {
 
 type GetDepositRecordsResponse []DepositRecord
 
-// GetOrderRecordResponse represents the response from the get order records endpoint.
-type GetOrderRecordResponse struct {
+// OrderRecordsData represents a single data item in the order records response
+type OrderRecordsData struct {
 	Orders              []OrderJSON              `json:"orders"`
 	OrderFillingRecords []OrderFillingRecordJSON `json:"order_filling_records"`
+}
+
+// GetOrderRecordResponse represents the response from the get order records endpoint.
+type GetOrderRecordsResponse struct {
+	Data       []OrderRecordsData `json:"data"`
+	TotalCount int                `json:"total_count"`
+	TotalPage  int                `json:"total_page"`
 }
 
 type WithdrawalRecord struct {
@@ -43,9 +50,9 @@ type WithdrawalRecord struct {
 type GetWithdrawalRecordsResponse []WithdrawalRecord
 
 type AssetBalance struct {
-	Asset  string `json:"asset"`
-	Free   int64  `json:"free"`
-	Locked int64  `json:"locked"`
+	Asset  string  `json:"asset"`
+	Free   float64 `json:"free"`
+	Locked float64 `json:"locked"`
 }
 
 type GetAccountBalanceResponse []AssetBalance
@@ -93,13 +100,11 @@ type GetMarketPriceResponse struct {
 }
 
 type Trade struct {
-	Time   string  `json:"time"`
-	Symbol string  `json:"symbol"`
-	Open   float64 `json:"open"`
-	High   float64 `json:"high"`
-	Low    float64 `json:"low"`
-	Close  float64 `json:"close"`
-	Volume float64 `json:"volume"`
+	Amount    float64 `json:"amount"`
+	Price     float64 `json:"price"`
+	Side      string  `json:"side"`
+	Symbol    string  `json:"symbol"`
+	Timestamp string  `json:"timestamp"`
 }
 
 type GetAggregatedPriceResponse []Trade
