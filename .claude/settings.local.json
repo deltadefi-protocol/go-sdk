@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:docs.deltadefi.io)",
+      "WebFetch(domain:docs.deltadefi.io)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
