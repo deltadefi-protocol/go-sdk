@@ -50,12 +50,11 @@ type SubmitTransferalTransactionRequest struct {
 type Interval string
 
 const (
+	Interval5m  Interval = "5m"
 	Interval15m Interval = "15m"
 	Interval30m Interval = "30m"
 	Interval1h  Interval = "1h"
 	Interval1d  Interval = "1d"
-	Interval1w  Interval = "1w"
-	Interval1M  Interval = "1M"
 )
 
 type GetAggregatedPriceRequest struct {

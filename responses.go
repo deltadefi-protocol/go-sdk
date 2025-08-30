@@ -112,7 +112,17 @@ type Trade struct {
 	Timestamp string  `json:"timestamp"`
 }
 
-type GetAggregatedPriceResponse []Trade
+type Candlestick struct {
+	Timestamp int64   `json:"t"`
+	Symbol    string  `json:"s"`
+	Open      float64 `json:"o"`
+	High      float64 `json:"h"`
+	Low       float64 `json:"l"`
+	Close     float64 `json:"c"`
+	Volume    float64 `json:"v"`
+}
+
+type GetAggregatedPriceResponse []Candlestick
 
 type BuildPlaceOrderTransactionResponse struct {
 	OrderID string `json:"order_id"`

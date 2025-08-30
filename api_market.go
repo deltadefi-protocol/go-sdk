@@ -18,7 +18,10 @@ func newMarketClient(client *Client) *MarketClient {
 }
 
 func (c *MarketClient) GetMarketPrice(symbol string) (*GetMarketPriceResponse, error) {
-	bodyBytes, err := c.client.get(c.pathUrl + "/market-price?symbol=" + symbol)
+	params := make(map[string]string)
+	params["symbol"] = symbol
+
+	bodyBytes, err := c.client.getWithParams(c.pathUrl+"/market-price", params)
 	if err != nil {
 		return nil, err
 	}
