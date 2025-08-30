@@ -41,6 +41,11 @@ type GetOrderRecordsResponse struct {
 	TotalPage  int                `json:"total_page"`
 }
 
+// GetOrderRecordResponse represents the response from the get single order record endpoint.
+type GetOrderRecordResponse struct {
+	OrderJSON OrderJSON `json:"order_json"`
+}
+
 type WithdrawalRecord struct {
 	CreatedAt string            `json:"created_at"`
 	Status    TransactionStatus `json:"status"`

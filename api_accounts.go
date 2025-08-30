@@ -2,6 +2,7 @@ package deltadefi
 
 import (
 	"encoding/json"
+	"fmt"
 	"strconv"
 )
 
@@ -103,6 +104,24 @@ func (c *AccountsClient) GetOrderRecords(data *GetOrderRecordRequest) (*GetOrder
 		return nil, err
 	}
 	return &getOrderRecordsResponse, nil
+}
+
+// GetOrderRecord retrieves a single order record by order ID.
+func (c *AccountsClient) GetOrderRecord(orderId string) (*GetOrderRecordResponse, error) {
+	// Get request with query parameters - note the endpoint is /account/order (singular)
+	bodyBytes, err := c.client.get(c.pathUrl + "/order/" + orderId)
+	if err != nil {
+		return nil, err
+	}
+
+	var getOrderRecordResponse GetOrderRecordResponse
+	err = json.Unmarshal(bodyBytes, &getOrderRecordResponse)
+
+	if err != nil {
+		fmt.Printf("Error unmarshalling GetOrderRecordResponse: %v\n", err)
+		return nil, err
+	}
+	return &getOrderRecordResponse, nil
 }
 
 func (c *AccountsClient) GetAccountBalance() (*GetAccountBalanceResponse, error) {
