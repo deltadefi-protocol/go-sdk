@@ -31,7 +31,7 @@ func (c *OrderClient) BuildPlaceOrderTransaction(data *BuildPlaceOrderTransactio
 }
 
 func (c *OrderClient) BuildCancelOrderTransaction(orderId string) (*BuildCancelOrderTransactionResponse, error) {
-	bodyBytes, err := c.client.delete(c.pathUrl+orderId+"/build", nil)
+	bodyBytes, err := c.client.delete(c.pathUrl+"/"+orderId+"/build", nil)
 	if err != nil {
 		return nil, err
 	}

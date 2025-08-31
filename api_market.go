@@ -35,7 +35,7 @@ func (c *MarketClient) GetMarketPrice(symbol string) (*GetMarketPriceResponse, e
 }
 
 func (c *MarketClient) GetAggregatedPrice(data *GetAggregatedPriceRequest) (*GetAggregatedPriceResponse, error) {
-	fullPath := c.pathUrl + "/graph/" + data.Symbol + "?interval=" + string(data.Interval) +
+	fullPath := c.pathUrl + "/graph/" + string(data.Symbol) + "?interval=" + string(data.Interval) +
 		"&start=" + fmt.Sprint(data.Start) + "&end=" + fmt.Sprint(data.End)
 	bodyBytes, err := c.client.get(fullPath)
 	if err != nil {

@@ -58,20 +58,20 @@ const (
 )
 
 type GetAggregatedPriceRequest struct {
-	Symbol   string   `json:"symbol"`
+	Symbol   Symbol   `json:"symbol"`
 	Interval Interval `json:"interval"`
 	Start    int64    `json:"start"`
 	End      int64    `json:"end"`
 }
 
 type BuildPlaceOrderTransactionRequest struct {
-	Symbol                string    `json:"symbol"`
+	Symbol                Symbol    `json:"symbol"`
 	Side                  OrderSide `json:"side"`
 	Type                  OrderType `json:"type"`
 	Quantity              float64   `json:"quantity"`
-	Price                 float64   `json:"price"`
-	LimitSlippage         bool      `json:"limit_slippage"`
-	MaxSlippageBasisPoint bool      `json:"max_slippage_basis_point"`
+	Price                 *float64  `json:"price,omitempty"`
+	LimitSlippage         *bool     `json:"limit_slippage,omitempty"`
+	MaxSlippageBasisPoint *int      `json:"max_slippage_basis_point,omitempty"`
 }
 
 type SubmitPlaceOrderTransactionRequest struct {
@@ -81,4 +81,17 @@ type SubmitPlaceOrderTransactionRequest struct {
 
 type SubmitCancelOrderTransactionRequest struct {
 	SignedTx string `json:"signed_tx"`
+}
+
+// Helper functions for creating optional pointer values
+func FloatPtr(f float64) *float64 {
+	return &f
+}
+
+func BoolPtr(b bool) *bool {
+	return &b
+}
+
+func IntPtr(i int) *int {
+	return &i
 }

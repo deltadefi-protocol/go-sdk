@@ -7,20 +7,28 @@ import (
 	"io"
 	"net/http"
 	"time"
+
+	rum "github.com/sidan-lab/rum/wallet"
 )
 
 type DeltaDeFi struct {
-	Accounts *AccountsClient
-	Market   *MarketClient
-	Order    *OrderClient
+	Accounts        *AccountsClient
+	Market          *MarketClient
+	Order           *OrderClient
+	MasterWallet    *rum.Wallet
+	OperationWallet *rum.Wallet
+	client          *Client
 }
 
 func NewDeltaDeFi(cfg ApiConfig) *DeltaDeFi {
 	client := newClient(cfg)
 	return &DeltaDeFi{
-		Accounts: newAccountsClient(client),
-		Market:   newMarketClient(client),
-		Order:    newOrderClient(client),
+		Accounts:        newAccountsClient(client),
+		Market:          newMarketClient(client),
+		Order:           newOrderClient(client),
+		MasterWallet:    nil,
+		OperationWallet: nil,
+		client:          client,
 	}
 }
 
