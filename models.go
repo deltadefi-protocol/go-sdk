@@ -1,5 +1,6 @@
 package deltadefi
 
+// OrderStatus represents the various states an order can be in.
 type OrderStatus string
 
 const (
@@ -11,6 +12,7 @@ const (
 	OrderStatusCancelled  OrderStatus = "cancelled"
 )
 
+// OrderSide represents whether an order is buying or selling.
 type OrderSide string
 
 const (
@@ -18,6 +20,7 @@ const (
 	OrderSideSell OrderSide = "sell"
 )
 
+// OrderType represents the type of order (market or limit).
 type OrderType string
 
 const (
@@ -25,12 +28,14 @@ const (
 	OrderTypeLimit  OrderType = "limit"
 )
 
+// Symbol represents a trading pair symbol.
 type Symbol string
 
 const (
 	ADAUSDM Symbol = "ADAUSDM"
 )
 
+// OrderJSON represents a complete order with all its details.
 type OrderJSON struct {
 	OrderID       string                     `json:"order_id"`
 	Status        string                     `json:"status"` // Changed from OrderStatus to string
@@ -49,7 +54,7 @@ type OrderJSON struct {
 	Fills         []OrderExecutionRecordJSON `json:"fills,omitempty"` // Changed from *[]OrderExecutionRecordJSON to []OrderExecutionRecordJSON
 }
 
-// TransactionStatus represents the transaction statuses.
+// TransactionStatus represents the various states a transaction can be in.
 type TransactionStatus string
 
 const (
@@ -60,13 +65,14 @@ const (
 	TransactionStatusConfirmed        TransactionStatus = "confirmed"
 )
 
+// Asset represents a cryptocurrency asset with its quantity and unit.
 type Asset struct {
 	Asset     string  `json:"asset"`
 	AssetUnit string  `json:"asset_unit"`
 	Qty       float64 `json:"qty"`
 }
 
-// OrderExecutionRole represents the role in an order execution.
+// OrderExecutionRole represents whether the order was a maker or taker in the execution.
 type OrderExecutionRole string
 
 const (
@@ -74,7 +80,7 @@ const (
 	OrderExecutionRoleTaker OrderExecutionRole = "taker"
 )
 
-// OrderExecutionRecordJSON represents an order execution record in JSON format.
+// OrderExecutionRecordJSON represents the details of a single order execution/fill.
 type OrderExecutionRecordJSON struct {
 	ID                  string             `json:"id"`
 	OrderID             string             `json:"order_id"`
@@ -87,7 +93,7 @@ type OrderExecutionRecordJSON struct {
 	CreateTime          int64              `json:"create_time"`
 }
 
-// OrderFillingRecordJSON represents an order filling record in JSON format.
+// OrderFillingRecordJSON represents a record of order fill activity.
 type OrderFillingRecordJSON struct {
 	ExecutionID   string    `json:"execution_id"`
 	OrderID       string    `json:"order_id"`
@@ -102,7 +108,7 @@ type OrderFillingRecordJSON struct {
 	CreatedTime   uint64    `json:"create_time"`
 }
 
-// OrderRecordStatus represents the status filter for order records
+// OrderRecordStatus represents the different types of order record queries available.
 type OrderRecordStatus string
 
 const (
@@ -111,7 +117,7 @@ const (
 	OrderRecordStatusTradingHistory OrderRecordStatus = "tradingHistory"
 )
 
-// GetOrderRecordRequest represents the request parameters for fetching order records
+// GetOrderRecordRequest contains parameters for querying order records with filtering and pagination.
 type GetOrderRecordRequest struct {
 	Status OrderRecordStatus `json:"status"`           // Must be either 'openOrder', 'orderHistory', or 'tradingHistory'
 	Limit  int               `json:"limit,omitempty"`  // Default is 10, must be between 1 and 250

@@ -2,6 +2,7 @@ package deltadefi
 
 import "github.com/sidan-lab/rum"
 
+// SignInRequest contains credentials for user authentication.
 type SignInRequest struct {
 	WalletAddress string `json:"wallet_address"`
 	AuthKey       string `json:"auth_key"`
@@ -21,32 +22,39 @@ type SignInRequest struct {
 //	type SubmitDeleteAccountTransactionRequest struct {
 //		SignedTx string `json:"signed_tx"`
 //	}
+// BuildDepositTransactionRequest contains parameters for building a deposit transaction.
 type BuildDepositTransactionRequest struct {
 	DepositAmount []rum.Asset `json:"deposit_amount"`
 	InputUtxos    []rum.UTxO  `json:"input_utxos"`
 }
 
+// BuildWithdrawalTransactionRequest contains parameters for building a withdrawal transaction.
 type BuildWithdrawalTransactionRequest struct {
 	WithdrawalAmount []rum.Asset `json:"withdrawal_amount"`
 }
 
+// BuildTransferalTransactionRequest contains parameters for building a transfer transaction.
 type BuildTransferalTransactionRequest struct {
 	TransferalAmount []rum.Asset `json:"transferal_amount"`
 	ToAddress        string      `json:"to_address"`
 }
 
+// SubmitDepositTransactionRequest contains the signed transaction for deposit submission.
 type SubmitDepositTransactionRequest struct {
 	SignedTx string `json:"signed_tx"`
 }
 
+// SubmitWithdrawalTransactionRequest contains the signed transaction for withdrawal submission.
 type SubmitWithdrawalTransactionRequest struct {
 	SignedTx string `json:"signed_tx"`
 }
 
+// SubmitTransferalTransactionRequest contains the signed transaction for transfer submission.
 type SubmitTransferalTransactionRequest struct {
 	SignedTx string `json:"signed_tx"`
 }
 
+// Interval represents time intervals for candlestick data.
 type Interval string
 
 const (
@@ -57,6 +65,7 @@ const (
 	Interval1d  Interval = "1d"
 )
 
+// GetAggregatedPriceRequest contains parameters for retrieving historical price data.
 type GetAggregatedPriceRequest struct {
 	Symbol   Symbol   `json:"symbol"`
 	Interval Interval `json:"interval"`
@@ -64,6 +73,7 @@ type GetAggregatedPriceRequest struct {
 	End      int64    `json:"end"`
 }
 
+// BuildPlaceOrderTransactionRequest contains parameters for building an order placement transaction.
 type BuildPlaceOrderTransactionRequest struct {
 	Symbol                Symbol    `json:"symbol"`
 	Side                  OrderSide `json:"side"`
@@ -74,24 +84,31 @@ type BuildPlaceOrderTransactionRequest struct {
 	MaxSlippageBasisPoint *int      `json:"max_slippage_basis_point,omitempty"`
 }
 
+// SubmitPlaceOrderTransactionRequest contains the order ID and signed transaction for order submission.
 type SubmitPlaceOrderTransactionRequest struct {
 	OrderID  string `json:"order_id"`
 	SignedTx string `json:"signed_tx"`
 }
 
+// SubmitCancelOrderTransactionRequest contains the signed transaction for order cancellation.
 type SubmitCancelOrderTransactionRequest struct {
 	SignedTx string `json:"signed_tx"`
 }
 
-// Helper functions for creating optional pointer values
+// FloatPtr returns a pointer to the given float64 value.
+// Useful for setting optional fields in request structures.
 func FloatPtr(f float64) *float64 {
 	return &f
 }
 
+// BoolPtr returns a pointer to the given bool value.
+// Useful for setting optional fields in request structures.
 func BoolPtr(b bool) *bool {
 	return &b
 }
 
+// IntPtr returns a pointer to the given int value.
+// Useful for setting optional fields in request structures.
 func IntPtr(i int) *int {
 	return &i
 }
