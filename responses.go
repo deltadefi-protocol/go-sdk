@@ -157,6 +157,11 @@ type BuildCancelOrderTransactionResponse struct {
 	TxHex string `json:"tx_hex"`
 }
 
+// BuildCancelAllOrdersTransactionResponse contains the transaction hex for order cancellation.
+type BuildCancelAllOrdersTransactionResponse struct {
+	TxHexes []string `json:"tx_hexes"`
+}
+
 // SubmitPlaceOrderTransactionResponse contains the order details after successful submission.
 type SubmitPlaceOrderTransactionResponse struct {
 	Order OrderJSON `json:"order"`
@@ -165,4 +170,9 @@ type SubmitPlaceOrderTransactionResponse struct {
 // SubmitCancelOrderTransactionResponse contains the transaction hash after order cancellation.
 type SubmitCancelOrderTransactionResponse struct {
 	TxHash string `json:"txhash"`
+}
+
+// SubmitCancelAllOrdersTransactionResponse contains the transaction hash after order cancellation.
+type SubmitCancelAllOrdersTransactionResponse struct {
+	CancelledOrderIds []string `json:"cancelled_order_ids"`
 }

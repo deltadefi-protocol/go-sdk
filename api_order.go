@@ -23,7 +23,7 @@ func newOrderClient(client *Client) *OrderClient {
 // The returned transaction hex must be signed and then submitted using SubmitPlaceOrderTransactionRequest.
 //
 // Parameters:
-//   - data: Order details including symbol, side, type, quantity, and optional price/slippage settings
+//   - data: Order details including symbol, side, type, quantity, and optional price/slippage/post-only settings
 //
 // Returns:
 //   - *BuildPlaceOrderTransactionResponse: Order ID and transaction hex ready for signing
@@ -65,7 +65,27 @@ func (c *OrderClient) BuildCancelOrderTransaction(orderId string) (*BuildCancelO
 	return &buildCancelOrderTransactionResponse, nil
 }
 
-// SubmitPlaceOrderTransactionRequest submits a signed place order transaction to the network.
+// BuildCancelAllOrdersTransaction builds a transaction for canceling all existing orders.
+// The returned transaction hex must be signed and then submitted using SubmitCancelAllOrdersTransactionRequest.
+//
+// Returns:
+//   - *BuildCancelAllOrdersTransactionResponse: Transaction hex ready for signing
+//   - error: nil on success, error on failure
+func (c *OrderClient) BuildCancelAllOrdersTransaction() (*BuildCancelAllOrdersTransactionResponse, error) {
+	bodyBytes, err := c.client.delete(c.pathUrl+"/cancel-all/build", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var buildCancelAllOrdersTransactionResponse BuildCancelAllOrdersTransactionResponse
+	err = json.Unmarshal(bodyBytes, &buildCancelAllOrdersTransactionResponse)
+	if err != nil {
+		return nil, err
+	}
+	return &buildCancelAllOrdersTransactionResponse, nil
+}
+
+// SubmitPlaceOrderTransaction submits a signed place order transaction to the network.
 //
 // Parameters:
 //   - data: Submit request containing the order ID and signed transaction hex
@@ -73,7 +93,7 @@ func (c *OrderClient) BuildCancelOrderTransaction(orderId string) (*BuildCancelO
 // Returns:
 //   - *SubmitPlaceOrderTransactionResponse: Complete order details after submission
 //   - error: nil on success, error on failure
-func (c *OrderClient) SubmitPlaceOrderTransactionRequest(data *SubmitPlaceOrderTransactionRequest) (*SubmitPlaceOrderTransactionResponse, error) {
+func (c *OrderClient) SubmitPlaceOrderTransaction(data *SubmitPlaceOrderTransactionRequest) (*SubmitPlaceOrderTransactionResponse, error) {
 	bodyBytes, err := c.client.post(c.pathUrl+"/submit", data)
 	if err != nil {
 		return nil, err
@@ -87,7 +107,7 @@ func (c *OrderClient) SubmitPlaceOrderTransactionRequest(data *SubmitPlaceOrderT
 	return &submitPlaceOrderTransactionResponse, nil
 }
 
-// SubmitCancelOrderTransactionRequest submits a signed cancel order transaction to the network.
+// SubmitCancelOrderTransaction submits a signed cancel order transaction to the network.
 //
 // Parameters:
 //   - data: Submit request containing the signed transaction hex
@@ -95,7 +115,7 @@ func (c *OrderClient) SubmitPlaceOrderTransactionRequest(data *SubmitPlaceOrderT
 // Returns:
 //   - *SubmitCancelOrderTransactionResponse: Transaction hash of the cancellation
 //   - error: nil on success, error on failure
-func (c *OrderClient) SubmitCancelOrderTransactionRequest(data *SubmitCancelOrderTransactionRequest) (*SubmitCancelOrderTransactionResponse, error) {
+func (c *OrderClient) SubmitCancelOrderTransaction(data *SubmitCancelOrderTransactionRequest) (*SubmitCancelOrderTransactionResponse, error) {
 	bodyBytes, err := c.client.delete(c.pathUrl+"/submit", data)
 	if err != nil {
 		return nil, err
@@ -107,4 +127,26 @@ func (c *OrderClient) SubmitCancelOrderTransactionRequest(data *SubmitCancelOrde
 		return nil, err
 	}
 	return &submitCancelOrderTransactionResponse, nil
+}
+
+// SubmitCancelAllOrdersTransaction submits a signed cancel all orders transaction to the network.
+//
+// Parameters:
+//   - data: Submit request containing the signed transaction hex
+//
+// Returns:
+//   - *SubmitCancelAllOrdersTransactionResponse: Transaction hash of the cancellation
+//   - error: nil on success, error on failure
+func (c *OrderClient) SubmitCancelAllOrdersTransaction(data *SubmitCancelAllOrdersTransactionRequest) (*SubmitCancelAllOrdersTransactionResponse, error) {
+	bodyBytes, err := c.client.delete(c.pathUrl+"/cancel-all/submit", data)
+	if err != nil {
+		return nil, err
+	}
+
+	var submitCancelAllOrdersTransactionResponse SubmitCancelAllOrdersTransactionResponse
+	err = json.Unmarshal(bodyBytes, &submitCancelAllOrdersTransactionResponse)
+	if err != nil {
+		return nil, err
+	}
+	return &submitCancelAllOrdersTransactionResponse, nil
 }

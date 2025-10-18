@@ -22,6 +22,7 @@ type SignInRequest struct {
 //	type SubmitDeleteAccountTransactionRequest struct {
 //		SignedTx string `json:"signed_tx"`
 //	}
+//
 // BuildDepositTransactionRequest contains parameters for building a deposit transaction.
 type BuildDepositTransactionRequest struct {
 	DepositAmount []rum.Asset `json:"deposit_amount"`
@@ -80,8 +81,9 @@ type BuildPlaceOrderTransactionRequest struct {
 	Type                  OrderType `json:"type"`
 	Quantity              float64   `json:"quantity"`
 	Price                 *float64  `json:"price,omitempty"`
-	LimitSlippage         *bool     `json:"limit_slippage,omitempty"`
 	MaxSlippageBasisPoint *int      `json:"max_slippage_basis_point,omitempty"`
+	LimitSlippage         *bool     `json:"limit_slippage,omitempty"`
+	PostOnly              bool      `json:"post_only,omitempty"`
 }
 
 // SubmitPlaceOrderTransactionRequest contains the order ID and signed transaction for order submission.
@@ -93,6 +95,11 @@ type SubmitPlaceOrderTransactionRequest struct {
 // SubmitCancelOrderTransactionRequest contains the signed transaction for order cancellation.
 type SubmitCancelOrderTransactionRequest struct {
 	SignedTx string `json:"signed_tx"`
+}
+
+// SubmitCancelAllOrdersTransactionRequest contains the signed transaction for order cancellation.
+type SubmitCancelAllOrdersTransactionRequest struct {
+	SignedTxs string `json:"signed_txs"`
 }
 
 // FloatPtr returns a pointer to the given float64 value.

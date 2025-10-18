@@ -61,7 +61,7 @@ func (d *DeltaDeFi) PostOrder(data *BuildPlaceOrderTransactionRequest) (*SubmitP
 		return nil, err
 	}
 
-	submitRes, err := d.Order.SubmitPlaceOrderTransactionRequest(&SubmitPlaceOrderTransactionRequest{
+	submitRes, err := d.Order.SubmitPlaceOrderTransaction(&SubmitPlaceOrderTransactionRequest{
 		OrderID:  buildRes.OrderID,
 		SignedTx: signedTx,
 	})
@@ -96,7 +96,7 @@ func (d *DeltaDeFi) CancelOrder(orderId string) (*SubmitCancelOrderTransactionRe
 		return nil, err
 	}
 
-	submitRes, err := d.Order.SubmitCancelOrderTransactionRequest(&SubmitCancelOrderTransactionRequest{
+	submitRes, err := d.Order.SubmitCancelOrderTransaction(&SubmitCancelOrderTransactionRequest{
 		SignedTx: signedTx,
 	})
 	if err != nil {
