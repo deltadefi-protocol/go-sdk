@@ -18,17 +18,17 @@ import (
 // It provides access to all API endpoints through specialized client instances.
 type DeltaDeFi struct {
 	// Accounts provides access to account management operations
-	Accounts        *AccountsClient
+	Accounts *AccountsClient
 	// Market provides access to market data operations
-	Market          *MarketClient
+	Market *MarketClient
 	// Order provides access to order management operations
-	Order           *OrderClient
+	Order *OrderClient
 	// MasterWallet holds the master wallet instance
-	MasterWallet    *rum.Wallet
+	MasterWallet *rum.Wallet
 	// OperationWallet holds the operation wallet instance for transaction signing
 	OperationWallet *rum.Wallet
 	// client is the underlying HTTP client
-	client          *Client
+	client *Client
 }
 
 // NewDeltaDeFi creates a new DeltaDeFi client instance.
@@ -54,32 +54,35 @@ func NewDeltaDeFi(cfg ApiConfig) *DeltaDeFi {
 // Client represents the underlying HTTP client for API communication.
 type Client struct {
 	// ApiKey is the API authentication key
-	ApiKey            string
+	ApiKey string
 	// NetworkId identifies the network (0=dev/staging, 1=mainnet)
-	NetworkId         uint8
+	NetworkId uint8
 	// OperationPasscode is used for decrypting operation keys
 	OperationPasscode string
 	// HTTPClient is the HTTP client instance
-	HTTPClient        *http.Client
+	HTTPClient *http.Client
 	// BaseURL is the API base URL
-	BaseURL           string
+	BaseURL string
+	// WsURL is the WebSocket base URL
+	WsURL string
 }
 
 // newClient creates a new HTTP client instance based on the provided configuration.
 // It sets the appropriate base URL and network ID based on the network selection.
 func newClient(cfg ApiConfig) *Client {
 	var networkId uint8
-	var baseURL string
+	var baseURL, wsURL string
 
-	if cfg.Network == "mainnet" {
+	switch cfg.Network {
+	case ApiNetworkMainnet:
 		networkId = uint8(1)
-		baseURL = "https://api-staging.deltadefi.io" // TODO: input production link once available
-	} else if cfg.Network == "staging" {
+		baseURL = "https://api.deltadefi.io"
+		wsURL = "wss://stream.deltadefi.io"
+
+	case ApiNetworkStaging:
 		networkId = uint8(0)
 		baseURL = "https://api-staging.deltadefi.io"
-	} else {
-		networkId = uint8(0)
-		baseURL = "https://api-dev.deltadefi.io"
+		wsURL = "wss://stream-staging.deltadefi.io"
 	}
 
 	if (cfg.ProvidedBaseUrl) != "" {
@@ -94,6 +97,7 @@ func newClient(cfg ApiConfig) *Client {
 			Timeout: 5 * time.Minute,
 		},
 		BaseURL: baseURL,
+		WsURL:   wsURL,
 	}
 }
 

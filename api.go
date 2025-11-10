@@ -104,3 +104,39 @@ func (d *DeltaDeFi) CancelOrder(orderId string) (*SubmitCancelOrderTransactionRe
 	}
 	return submitRes, nil
 }
+
+// CancelAllOrders is a high-level method for canceling all existing orders.
+// It handles the complete cancellation flow: building the transaction, signing it, and submitting it.
+// The operation wallet must be loaded before calling this method.
+//
+// Returns:
+//   - *SubmitCancelAllOrdersTransactionResponse: Details of all canceled orders
+//   - error: nil on success, error on failure
+func (d *DeltaDeFi) CancelAllOrders() (*SubmitCancelAllOrdersTransactionResponse, error) {
+	if d.OperationWallet == nil {
+		return nil, fmt.Errorf("operation wallet is not loaded")
+	}
+
+	buildRes, err := d.Order.BuildCancelAllOrdersTransaction()
+	if err != nil {
+		return nil, err
+	}
+
+	signedTxs := make([]string, 0, len(buildRes.TxHexes))
+	for _, txHex := range buildRes.TxHexes {
+		signedTx, err := d.OperationWallet.Signer().SignTransaction(txHex)
+		if err != nil {
+			return nil, err
+		}
+		signedTxs = append(signedTxs, signedTx)
+	}
+
+	submitRes, err := d.Order.SubmitCancelAllOrdersTransaction(&SubmitCancelAllOrdersTransactionRequest{
+		SignedTxs: signedTxs,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+	return submitRes, nil
+}

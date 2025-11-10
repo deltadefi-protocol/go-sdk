@@ -99,7 +99,7 @@ type SubmitCancelOrderTransactionRequest struct {
 
 // SubmitCancelAllOrdersTransactionRequest contains the signed transaction for order cancellation.
 type SubmitCancelAllOrdersTransactionRequest struct {
-	SignedTxs string `json:"signed_txs"`
+	SignedTxs []string `json:"signed_txs"`
 }
 
 // FloatPtr returns a pointer to the given float64 value.
