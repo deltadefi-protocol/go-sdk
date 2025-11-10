@@ -1,15 +1,10 @@
 package deltadefi
 
 import (
-	"crypto/aes"
-	"crypto/cipher"
-	"crypto/sha256"
-	"encoding/base64"
-	"encoding/json"
 	"fmt"
 
+	"github.com/sidan-lab/rum"
 	"github.com/sidan-lab/rum/wallet"
-	"golang.org/x/crypto/pbkdf2"
 )
 
 // LoadOperationKey loads and decrypts the operation key required for transaction signing.
@@ -27,7 +22,7 @@ func (d *DeltaDeFi) LoadOperationKey(passcode string) error {
 	}
 
 	// Use proper AES-GCM decryption that matches frontend encryption format
-	operationKey, err := decryptWithCipher(res.EncryptedOperationKey, passcode)
+	operationKey, err := rum.DecryptWithCipher(res.EncryptedOperationKey, passcode)
 	if err != nil {
 		return fmt.Errorf("decryption failed: %w", err)
 	}
@@ -39,70 +34,6 @@ func (d *DeltaDeFi) LoadOperationKey(passcode string) error {
 
 	d.OperationWallet = operationWallet
 	return nil
-}
-
-func decryptWithCipher(encryptedDataJSON string, password string) (string, error) {
-	// Parse the encrypted data JSON
-	var encData struct {
-		IV         string  `json:"iv"`
-		Salt       *string `json:"salt,omitempty"`
-		Ciphertext string  `json:"ciphertext"`
-	}
-
-	err := json.Unmarshal([]byte(encryptedDataJSON), &encData)
-	if err != nil {
-		return "", fmt.Errorf("failed to parse encrypted data: %w", err)
-	}
-
-	// Decode IV from base64
-	iv, err := base64.StdEncoding.DecodeString(encData.IV)
-	if err != nil {
-		return "", fmt.Errorf("failed to decode IV: %w", err)
-	}
-
-	// Decode ciphertext from base64
-	ciphertext, err := base64.StdEncoding.DecodeString(encData.Ciphertext)
-	if err != nil {
-		return "", fmt.Errorf("failed to decode ciphertext: %w", err)
-	}
-
-	// Handle salt - support both new format (with salt) and legacy format (without salt)
-	var salt []byte
-	if encData.Salt != nil && *encData.Salt != "" {
-		// New format: use the provided salt
-		salt, err = base64.StdEncoding.DecodeString(*encData.Salt)
-		if err != nil {
-			return "", fmt.Errorf("failed to decode salt: %w", err)
-		}
-	} else {
-		// Legacy format: use zero-filled salt of IV length for backward compatibility
-		salt = make([]byte, len(iv))
-	}
-
-	// Derive cryptographic key from password using PBKDF2
-	// Matches frontend: 100,000 iterations, SHA-256, 256-bit key
-	derivedKey := pbkdf2.Key([]byte(password), salt, 100000, 32, sha256.New)
-
-	// Create AES cipher
-	block, err := aes.NewCipher(derivedKey)
-	if err != nil {
-		return "", fmt.Errorf("failed to create cipher: %w", err)
-	}
-
-	// Create GCM mode
-	aesgcm, err := cipher.NewGCM(block)
-	if err != nil {
-		return "", fmt.Errorf("failed to create GCM: %w", err)
-	}
-
-	// Decrypt the data
-	plaintext, err := aesgcm.Open(nil, iv, ciphertext, nil)
-	if err != nil {
-		return "", fmt.Errorf("failed to decrypt (incorrect password or corrupted data): %w", err)
-	}
-
-	// Return the decrypted data as string
-	return string(plaintext), nil
 }
 
 // PostOrder is a high-level method for placing an order.

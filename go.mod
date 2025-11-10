@@ -2,7 +2,7 @@ module github.com/deltadefi-protocol/go-sdk
 
 go 1.23.1
 
-require github.com/sidan-lab/rum v0.3.0
+require github.com/sidan-lab/rum v0.3.1
 
 require (
 	github.com/blockfrost/blockfrost-go v0.3.0 // indirect
