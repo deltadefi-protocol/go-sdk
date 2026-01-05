@@ -225,3 +225,32 @@ func (c *Client) delete(url string, body interface{}) ([]byte, error) {
 
 	return bodyBytes, nil
 }
+
+// patch performs a PATCH request with JSON body.
+// It automatically adds authentication headers and marshals the request body.
+func (c *Client) patch(url string, body interface{}) ([]byte, error) {
+	jsonBody, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	req, err := http.NewRequest("PATCH", c.BaseURL+url, bytes.NewBuffer(jsonBody))
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Add("X-API-KEY", c.ApiKey)
+
+	resp, err := c.HTTPClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	return bodyBytes, nil
+}

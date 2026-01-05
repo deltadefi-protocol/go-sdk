@@ -315,3 +315,301 @@ func (c *AccountsClient) SubmitTransferalTransaction(data *SubmitTransferalTrans
 	}
 	return &submitTransferalTransactionResponse, nil
 }
+
+// GetOpenOrders retrieves open orders for a specific symbol with pagination.
+//
+// Parameters:
+//   - data: Request parameters including symbol, limit, and page
+//
+// Returns:
+//   - *GetOpenOrdersResponse: Paginated open orders
+//   - error: nil on success, error on failure
+func (c *AccountsClient) GetOpenOrders(data *GetOpenOrdersRequest) (*GetOpenOrdersResponse, error) {
+	params := make(map[string]string)
+	params["symbol"] = data.Symbol
+
+	if data.Limit > 0 {
+		params["limit"] = strconv.Itoa(data.Limit)
+	}
+	if data.Page > 0 {
+		params["page"] = strconv.Itoa(data.Page)
+	}
+
+	bodyBytes, err := c.client.getWithParams(c.pathUrl+"/open-orders", params)
+	if err != nil {
+		return nil, err
+	}
+
+	var response GetOpenOrdersResponse
+	err = json.Unmarshal(bodyBytes, &response)
+	if err != nil {
+		return nil, err
+	}
+	return &response, nil
+}
+
+// GetTradeOrders retrieves trade orders (order history) for a specific symbol with pagination.
+//
+// Parameters:
+//   - data: Request parameters including symbol, limit, and page
+//
+// Returns:
+//   - *GetTradeOrdersResponse: Paginated trade orders
+//   - error: nil on success, error on failure
+func (c *AccountsClient) GetTradeOrders(data *GetTradeOrdersRequest) (*GetTradeOrdersResponse, error) {
+	params := make(map[string]string)
+	params["symbol"] = data.Symbol
+
+	if data.Limit > 0 {
+		params["limit"] = strconv.Itoa(data.Limit)
+	}
+	if data.Page > 0 {
+		params["page"] = strconv.Itoa(data.Page)
+	}
+
+	bodyBytes, err := c.client.getWithParams(c.pathUrl+"/trade-orders", params)
+	if err != nil {
+		return nil, err
+	}
+
+	var response GetTradeOrdersResponse
+	err = json.Unmarshal(bodyBytes, &response)
+	if err != nil {
+		return nil, err
+	}
+	return &response, nil
+}
+
+// GetAccountTrades retrieves account trades (fills) for a specific symbol with pagination.
+//
+// Parameters:
+//   - data: Request parameters including symbol, limit, and page
+//
+// Returns:
+//   - *GetAccountTradesResponse: Paginated account trades
+//   - error: nil on success, error on failure
+func (c *AccountsClient) GetAccountTrades(data *GetAccountTradesRequest) (*GetAccountTradesResponse, error) {
+	params := make(map[string]string)
+	params["symbol"] = data.Symbol
+
+	if data.Limit > 0 {
+		params["limit"] = strconv.Itoa(data.Limit)
+	}
+	if data.Page > 0 {
+		params["page"] = strconv.Itoa(data.Page)
+	}
+
+	bodyBytes, err := c.client.getWithParams(c.pathUrl+"/trades", params)
+	if err != nil {
+		return nil, err
+	}
+
+	var response GetAccountTradesResponse
+	err = json.Unmarshal(bodyBytes, &response)
+	if err != nil {
+		return nil, err
+	}
+	return &response, nil
+}
+
+// GetMaxDeposit retrieves the maximum deposit amount allowed.
+//
+// Returns:
+//   - *GetMaxDepositResponse: Maximum deposit amount
+//   - error: nil on success, error on failure
+func (c *AccountsClient) GetMaxDeposit() (*GetMaxDepositResponse, error) {
+	bodyBytes, err := c.client.get(c.pathUrl + "/max-deposit")
+	if err != nil {
+		return nil, err
+	}
+
+	var response GetMaxDepositResponse
+	err = json.Unmarshal(bodyBytes, &response)
+	if err != nil {
+		return nil, err
+	}
+	return &response, nil
+}
+
+// GetTransferalRecords retrieves transferal records with optional filtering and pagination.
+//
+// Parameters:
+//   - data: Request parameters including limit, page, and status filter
+//
+// Returns:
+//   - *GetTransferalRecordsResponse: Array of transferal records
+//   - error: nil on success, error on failure
+func (c *AccountsClient) GetTransferalRecords(data *GetTransferalRecordsRequest) (*GetTransferalRecordsResponse, error) {
+	params := make(map[string]string)
+
+	if data.Limit > 0 {
+		params["limit"] = strconv.Itoa(data.Limit)
+	}
+	if data.Page > 0 {
+		params["page"] = strconv.Itoa(data.Page)
+	}
+	if data.Status != "" {
+		params["status"] = data.Status
+	}
+
+	bodyBytes, err := c.client.getWithParams(c.pathUrl+"/transferal-records", params)
+	if err != nil {
+		return nil, err
+	}
+
+	var response GetTransferalRecordsResponse
+	err = json.Unmarshal(bodyBytes, &response)
+	if err != nil {
+		return nil, err
+	}
+	return &response, nil
+}
+
+// GetTransferalRecordByTxHash retrieves a specific transferal record by transaction hash.
+//
+// Parameters:
+//   - txHash: The transaction hash of the transferal record
+//
+// Returns:
+//   - *TransferalRecord: The transferal record
+//   - error: nil on success, error on failure
+func (c *AccountsClient) GetTransferalRecordByTxHash(txHash string) (*TransferalRecord, error) {
+	bodyBytes, err := c.client.get(c.pathUrl + "/transferal-records/" + txHash)
+	if err != nil {
+		return nil, err
+	}
+
+	var response TransferalRecord
+	err = json.Unmarshal(bodyBytes, &response)
+	if err != nil {
+		return nil, err
+	}
+	return &response, nil
+}
+
+// BuildRequestTransferalTransaction builds a request transferal transaction.
+// This is used when requesting a transfer from another address.
+//
+// Parameters:
+//   - data: Request parameters including transferal amount, from address, and type
+//
+// Returns:
+//   - *BuildRequestTransferalTransactionResponse: Transaction hex ready for signing
+//   - error: nil on success, error on failure
+func (c *AccountsClient) BuildRequestTransferalTransaction(data *BuildRequestTransferalTransactionRequest) (*BuildRequestTransferalTransactionResponse, error) {
+	bodyBytes, err := c.client.post(c.pathUrl+"/request-transferal/build", data)
+	if err != nil {
+		return nil, err
+	}
+
+	var response BuildRequestTransferalTransactionResponse
+	err = json.Unmarshal(bodyBytes, &response)
+	if err != nil {
+		return nil, err
+	}
+	return &response, nil
+}
+
+// SubmitRequestTransferalTransaction submits a signed request transferal transaction.
+//
+// Parameters:
+//   - data: Submit request containing the signed transaction hex
+//
+// Returns:
+//   - *SubmitRequestTransferalTransactionResponse: Transaction hash of the submitted transaction
+//   - error: nil on success, error on failure
+func (c *AccountsClient) SubmitRequestTransferalTransaction(data *SubmitRequestTransferalTransactionRequest) (*SubmitRequestTransferalTransactionResponse, error) {
+	bodyBytes, err := c.client.post(c.pathUrl+"/request-transferal/submit", data)
+	if err != nil {
+		return nil, err
+	}
+
+	var response SubmitRequestTransferalTransactionResponse
+	err = json.Unmarshal(bodyBytes, &response)
+	if err != nil {
+		return nil, err
+	}
+	return &response, nil
+}
+
+// GetAPIKey retrieves the existing API key for the authenticated account.
+//
+// Returns:
+//   - *GetAPIKeyResponse: API key and creation timestamp
+//   - error: nil on success, error on failure
+func (c *AccountsClient) GetAPIKey() (*GetAPIKeyResponse, error) {
+	bodyBytes, err := c.client.get(c.pathUrl + "/api-key")
+	if err != nil {
+		return nil, err
+	}
+
+	var response GetAPIKeyResponse
+	err = json.Unmarshal(bodyBytes, &response)
+	if err != nil {
+		return nil, err
+	}
+	return &response, nil
+}
+
+// GetSpotAccount retrieves the spot account details for the authenticated user.
+//
+// Returns:
+//   - *GetSpotAccountResponse: Spot account details
+//   - error: nil on success, error on failure
+func (c *AccountsClient) GetSpotAccount() (*GetSpotAccountResponse, error) {
+	bodyBytes, err := c.client.get(c.pathUrl + "/spot-account")
+	if err != nil {
+		return nil, err
+	}
+
+	var response GetSpotAccountResponse
+	err = json.Unmarshal(bodyBytes, &response)
+	if err != nil {
+		return nil, err
+	}
+	return &response, nil
+}
+
+// CreateSpotAccount creates a new spot account.
+//
+// Parameters:
+//   - data: Request containing user ID, encrypted operation key, and key hash
+//
+// Returns:
+//   - *CreateSpotAccountResponse: Created spot account details
+//   - error: nil on success, error on failure
+func (c *AccountsClient) CreateSpotAccount(data *CreateSpotAccountRequest) (*CreateSpotAccountResponse, error) {
+	bodyBytes, err := c.client.post(c.pathUrl+"/spot-account", data)
+	if err != nil {
+		return nil, err
+	}
+
+	var response CreateSpotAccountResponse
+	err = json.Unmarshal(bodyBytes, &response)
+	if err != nil {
+		return nil, err
+	}
+	return &response, nil
+}
+
+// UpdateSpotAccount updates an existing spot account.
+//
+// Parameters:
+//   - data: Request containing user ID and new encrypted operation key
+//
+// Returns:
+//   - *UpdateSpotAccountResponse: Updated spot account details
+//   - error: nil on success, error on failure
+func (c *AccountsClient) UpdateSpotAccount(data *UpdateSpotAccountRequest) (*UpdateSpotAccountResponse, error) {
+	bodyBytes, err := c.client.patch(c.pathUrl+"/spot-account", data)
+	if err != nil {
+		return nil, err
+	}
+
+	var response UpdateSpotAccountResponse
+	err = json.Unmarshal(bodyBytes, &response)
+	if err != nil {
+		return nil, err
+	}
+	return &response, nil
+}

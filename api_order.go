@@ -42,47 +42,50 @@ func (c *OrderClient) BuildPlaceOrderTransaction(data *BuildPlaceOrderTransactio
 	return &buildPlaceOrderTransactionResponse, nil
 }
 
-// BuildCancelOrderTransaction builds a transaction for canceling an existing order.
-// The returned transaction hex must be signed and then submitted using SubmitCancelOrderTransactionRequest.
+// CancelOrder cancels an existing order by order ID.
+// This is a simplified endpoint that handles cancellation directly without build/sign/submit flow.
 //
 // Parameters:
 //   - orderId: The unique identifier of the order to cancel
 //
 // Returns:
-//   - *BuildCancelOrderTransactionResponse: Transaction hex ready for signing
+//   - *CancelOrderResponse: Contains the cancelled order ID
 //   - error: nil on success, error on failure
-func (c *OrderClient) BuildCancelOrderTransaction(orderId string) (*BuildCancelOrderTransactionResponse, error) {
-	bodyBytes, err := c.client.delete(c.pathUrl+"/"+orderId+"/build", nil)
+func (c *OrderClient) CancelOrder(orderId string) (*CancelOrderResponse, error) {
+	bodyBytes, err := c.client.post(c.pathUrl+"/"+orderId+"/cancel", nil)
 	if err != nil {
 		return nil, err
 	}
 
-	var buildCancelOrderTransactionResponse BuildCancelOrderTransactionResponse
-	err = json.Unmarshal(bodyBytes, &buildCancelOrderTransactionResponse)
+	var cancelOrderResponse CancelOrderResponse
+	err = json.Unmarshal(bodyBytes, &cancelOrderResponse)
 	if err != nil {
 		return nil, err
 	}
-	return &buildCancelOrderTransactionResponse, nil
+	return &cancelOrderResponse, nil
 }
 
-// BuildCancelAllOrdersTransaction builds a transaction for canceling all existing orders.
-// The returned transaction hex must be signed and then submitted using SubmitCancelAllOrdersTransactionRequest.
+// CancelAllOrders cancels all open orders for a given symbol.
+// This is a simplified endpoint that handles cancellation directly without build/sign/submit flow.
+//
+// Parameters:
+//   - symbol: The trading pair symbol to cancel orders for
 //
 // Returns:
-//   - *BuildCancelAllOrdersTransactionResponse: Transaction hex ready for signing
+//   - *CancelAllOrdersResponse: Contains the symbol and list of cancelled order IDs
 //   - error: nil on success, error on failure
-func (c *OrderClient) BuildCancelAllOrdersTransaction() (*BuildCancelAllOrdersTransactionResponse, error) {
-	bodyBytes, err := c.client.delete(c.pathUrl+"/cancel-all/build", nil)
+func (c *OrderClient) CancelAllOrders(symbol string) (*CancelAllOrdersResponse, error) {
+	bodyBytes, err := c.client.post(c.pathUrl+"/cancel-all", &CancelAllOrdersRequest{Symbol: symbol})
 	if err != nil {
 		return nil, err
 	}
 
-	var buildCancelAllOrdersTransactionResponse BuildCancelAllOrdersTransactionResponse
-	err = json.Unmarshal(bodyBytes, &buildCancelAllOrdersTransactionResponse)
+	var cancelAllOrdersResponse CancelAllOrdersResponse
+	err = json.Unmarshal(bodyBytes, &cancelAllOrdersResponse)
 	if err != nil {
 		return nil, err
 	}
-	return &buildCancelAllOrdersTransactionResponse, nil
+	return &cancelAllOrdersResponse, nil
 }
 
 // SubmitPlaceOrderTransaction submits a signed place order transaction to the network.
@@ -107,46 +110,3 @@ func (c *OrderClient) SubmitPlaceOrderTransaction(data *SubmitPlaceOrderTransact
 	return &submitPlaceOrderTransactionResponse, nil
 }
 
-// SubmitCancelOrderTransaction submits a signed cancel order transaction to the network.
-//
-// Parameters:
-//   - data: Submit request containing the signed transaction hex
-//
-// Returns:
-//   - *SubmitCancelOrderTransactionResponse: Transaction hash of the cancellation
-//   - error: nil on success, error on failure
-func (c *OrderClient) SubmitCancelOrderTransaction(data *SubmitCancelOrderTransactionRequest) (*SubmitCancelOrderTransactionResponse, error) {
-	bodyBytes, err := c.client.delete(c.pathUrl+"/submit", data)
-	if err != nil {
-		return nil, err
-	}
-
-	var submitCancelOrderTransactionResponse SubmitCancelOrderTransactionResponse
-	err = json.Unmarshal(bodyBytes, &submitCancelOrderTransactionResponse)
-	if err != nil {
-		return nil, err
-	}
-	return &submitCancelOrderTransactionResponse, nil
-}
-
-// SubmitCancelAllOrdersTransaction submits a signed cancel all orders transaction to the network.
-//
-// Parameters:
-//   - data: Submit request containing the signed transaction hex
-//
-// Returns:
-//   - *SubmitCancelAllOrdersTransactionResponse: Transaction hash of the cancellation
-//   - error: nil on success, error on failure
-func (c *OrderClient) SubmitCancelAllOrdersTransaction(data *SubmitCancelAllOrdersTransactionRequest) (*SubmitCancelAllOrdersTransactionResponse, error) {
-	bodyBytes, err := c.client.delete(c.pathUrl+"/cancel-all/submit", data)
-	if err != nil {
-		return nil, err
-	}
-
-	var submitCancelAllOrdersTransactionResponse SubmitCancelAllOrdersTransactionResponse
-	err = json.Unmarshal(bodyBytes, &submitCancelAllOrdersTransactionResponse)
-	if err != nil {
-		return nil, err
-	}
-	return &submitCancelAllOrdersTransactionResponse, nil
-}
