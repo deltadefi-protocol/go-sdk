@@ -36,8 +36,9 @@ type BuildWithdrawalTransactionRequest struct {
 
 // BuildTransferalTransactionRequest contains parameters for building a transfer transaction.
 type BuildTransferalTransactionRequest struct {
-	TransferalAmount []rum.Asset `json:"transferal_amount"`
-	ToAddress        string      `json:"to_address"`
+	TransferalAmount []rum.Asset    `json:"transferal_amount"`
+	ToAddress        string         `json:"to_address"`
+	TransferalType   TransferalType `json:"transferal_type,omitempty"`
 }
 
 // SubmitDepositTransactionRequest contains the signed transaction for deposit submission.
@@ -169,6 +170,7 @@ type CreateSpotAccountRequest struct {
 	EncryptedOperationKey string `json:"encrypted_operation_key"`
 	OperationKeyHash      string `json:"operation_key_hash"`
 	IsScriptOperationKey  *bool  `json:"is_script_operation_key"`
+	ReferralCode          string `json:"referral_code,omitempty"`
 }
 
 // UpdateSpotAccountRequest contains parameters for updating a spot account.

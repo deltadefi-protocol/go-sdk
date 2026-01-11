@@ -63,9 +63,10 @@ type GetWithdrawalRecordsResponse []WithdrawalRecord
 
 // AssetBalance represents the balance of a specific asset showing free and locked amounts.
 type AssetBalance struct {
-	Asset  string  `json:"asset"`
-	Free   float64 `json:"free"`
-	Locked float64 `json:"locked"`
+	Asset     string  `json:"asset"`
+	AssetUnit string  `json:"asset_unit"`
+	Free      float64 `json:"free"`
+	Locked    float64 `json:"locked"`
 }
 
 // GetAccountBalanceResponse is a collection of asset balances for the account.
@@ -73,7 +74,8 @@ type GetAccountBalanceResponse []AssetBalance
 
 // CreateNewAPIKeyResponse contains a newly generated API key.
 type CreateNewAPIKeyResponse struct {
-	APIKey string `json:"api_key"`
+	APIKey    string `json:"api_key"`
+	CreatedAt string `json:"created_at"`
 }
 
 // BuildDepositTransactionResponse contains the transaction hex for deposit operations.
@@ -134,7 +136,7 @@ type Trade struct {
 
 // Candlestick represents OHLCV (Open, High, Low, Close, Volume) data for a specific time period.
 type Candlestick struct {
-	Timestamp int64   `json:"t"`
+	Timestamp int32   `json:"t"`
 	Symbol    string  `json:"s"`
 	Open      float64 `json:"o"`
 	High      float64 `json:"h"`
@@ -153,9 +155,8 @@ type BuildPlaceOrderTransactionResponse struct {
 }
 
 // SubmitPlaceOrderTransactionResponse contains the order details after successful submission.
-type SubmitPlaceOrderTransactionResponse struct {
-	Order OrderJSON `json:"order"`
-}
+// The API returns OrderResponse directly without wrapping.
+type SubmitPlaceOrderTransactionResponse = OrderResponse
 
 // CancelOrderResponse contains the order ID of the cancelled order.
 type CancelOrderResponse struct {
@@ -207,15 +208,30 @@ type UpdateSpotAccountResponse struct {
 	UpdatedAt             string `json:"updated_at"`
 }
 
+// TransferStatus represents the status of a transfer.
+type TransferStatus string
+
+const (
+	TransferStatusPending   TransferStatus = "pending"
+	TransferStatusConfirmed TransferStatus = "confirmed"
+)
+
+// TransferDirection represents the direction of a transfer.
+type TransferDirection string
+
+const (
+	TransferDirectionIncoming TransferDirection = "incoming"
+	TransferDirectionOutgoing TransferDirection = "outgoing"
+)
+
 // TransferalRecord represents a single transferal transaction record.
 type TransferalRecord struct {
 	CreatedAt      string            `json:"created_at"`
-	Status         TransactionStatus `json:"status"`
+	Status         TransferStatus    `json:"status"`
 	Assets         []Asset           `json:"assets"`
+	TransferalType TransferalType    `json:"transferal_type"`
 	TxHash         string            `json:"tx_hash"`
-	ToAddress      string            `json:"to_address,omitempty"`
-	FromAddress    string            `json:"from_address,omitempty"`
-	TransferalType string            `json:"transferal_type,omitempty"`
+	Direction      TransferDirection `json:"direction"`
 }
 
 // GetTransferalRecordsResponse is a collection of transferal transaction records.
