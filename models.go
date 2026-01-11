@@ -73,9 +73,9 @@ const (
 
 // Asset represents a cryptocurrency asset with its quantity and unit.
 type Asset struct {
-	Asset     string  `json:"asset"`
-	AssetUnit string  `json:"asset_unit"`
-	Qty       float64 `json:"qty"`
+	Asset     string `json:"asset"`
+	AssetUnit string `json:"asset_unit"`
+	Qty       string `json:"qty"`
 }
 
 // OrderExecutionRole represents whether the order was a maker or taker in the execution.

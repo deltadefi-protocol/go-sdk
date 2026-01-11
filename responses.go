@@ -63,10 +63,10 @@ type GetWithdrawalRecordsResponse []WithdrawalRecord
 
 // AssetBalance represents the balance of a specific asset showing free and locked amounts.
 type AssetBalance struct {
-	Asset     string  `json:"asset"`
-	AssetUnit string  `json:"asset_unit"`
-	Free      float64 `json:"free"`
-	Locked    float64 `json:"locked"`
+	Asset     string `json:"asset"`
+	AssetUnit string `json:"asset_unit"`
+	Free      string `json:"free"`
+	Locked    string `json:"locked"`
 }
 
 // GetAccountBalanceResponse is a collection of asset balances for the account.
