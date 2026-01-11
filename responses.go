@@ -125,6 +125,11 @@ type GetMarketPriceResponse struct {
 	Price float64 `json:"price"`
 }
 
+// GetTickerPriceResponse contains the ticker price for a trading pair.
+type GetTickerPriceResponse struct {
+	Price float64 `json:"price"`
+}
+
 // Trade represents a completed trade with price, amount, and metadata.
 type Trade struct {
 	Amount    float64 `json:"amount"`
