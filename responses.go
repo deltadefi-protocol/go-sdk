@@ -63,9 +63,10 @@ type GetWithdrawalRecordsResponse []WithdrawalRecord
 
 // AssetBalance represents the balance of a specific asset showing free and locked amounts.
 type AssetBalance struct {
-	Asset  string  `json:"asset"`
-	Free   float64 `json:"free"`
-	Locked float64 `json:"locked"`
+	Asset     string  `json:"asset"`
+	AssetUnit string  `json:"asset_unit"`
+	Free      float64 `json:"free"`
+	Locked    float64 `json:"locked"`
 }
 
 // GetAccountBalanceResponse is a collection of asset balances for the account.
@@ -73,7 +74,8 @@ type GetAccountBalanceResponse []AssetBalance
 
 // CreateNewAPIKeyResponse contains a newly generated API key.
 type CreateNewAPIKeyResponse struct {
-	APIKey string `json:"api_key"`
+	APIKey    string `json:"api_key"`
+	CreatedAt string `json:"created_at"`
 }
 
 // BuildDepositTransactionResponse contains the transaction hex for deposit operations.
@@ -134,7 +136,7 @@ type Trade struct {
 
 // Candlestick represents OHLCV (Open, High, Low, Close, Volume) data for a specific time period.
 type Candlestick struct {
-	Timestamp int64   `json:"t"`
+	Timestamp int32   `json:"t"`
 	Symbol    string  `json:"s"`
 	Open      float64 `json:"o"`
 	High      float64 `json:"h"`
@@ -152,27 +154,164 @@ type BuildPlaceOrderTransactionResponse struct {
 	TxHex   string `json:"tx_hex"`
 }
 
-// BuildCancelOrderTransactionResponse contains the transaction hex for order cancellation.
-type BuildCancelOrderTransactionResponse struct {
+// SubmitPlaceOrderTransactionResponse contains the order details after successful submission.
+// The API returns OrderResponse directly without wrapping.
+type SubmitPlaceOrderTransactionResponse = OrderResponse
+
+// CancelOrderResponse contains the order ID of the cancelled order.
+type CancelOrderResponse struct {
+	OrderId string `json:"order_id"`
+}
+
+// CancelAllOrdersResponse contains details of all cancelled orders.
+type CancelAllOrdersResponse struct {
+	Symbol   string   `json:"symbol"`
+	OrderIds []string `json:"order_ids"`
+}
+
+// GetMaxDepositResponse contains the maximum deposit amount.
+type GetMaxDepositResponse struct {
+	MaxDeposit string `json:"max_deposit"`
+}
+
+// GetAPIKeyResponse contains the API key and creation timestamp.
+type GetAPIKeyResponse struct {
+	ApiKey    string `json:"api_key"`
+	CreatedAt string `json:"created_at"`
+}
+
+// GetSpotAccountResponse contains spot account details.
+type GetSpotAccountResponse struct {
+	AccountID             string `json:"account_id"`
+	AccountType           string `json:"account_type"`
+	EncryptedOperationKey string `json:"encrypted_operation_key"`
+	OperationKeyHash      string `json:"operation_key_hash"`
+	CreatedAt             string `json:"created_at"`
+}
+
+// CreateSpotAccountResponse contains the created spot account details.
+type CreateSpotAccountResponse struct {
+	AccountID             string `json:"account_id"`
+	AccountType           string `json:"account_type"`
+	EncryptedOperationKey string `json:"encrypted_operation_key"`
+	OperationKeyHash      string `json:"operation_key_hash"`
+	CreatedAt             string `json:"created_at"`
+}
+
+// UpdateSpotAccountResponse contains the updated spot account details.
+type UpdateSpotAccountResponse struct {
+	AccountID             string `json:"account_id"`
+	AccountType           string `json:"account_type"`
+	EncryptedOperationKey string `json:"encrypted_operation_key"`
+	OperationKeyHash      string `json:"operation_key_hash"`
+	CreatedAt             string `json:"created_at"`
+	UpdatedAt             string `json:"updated_at"`
+}
+
+// TransferStatus represents the status of a transfer.
+type TransferStatus string
+
+const (
+	TransferStatusPending   TransferStatus = "pending"
+	TransferStatusConfirmed TransferStatus = "confirmed"
+)
+
+// TransferDirection represents the direction of a transfer.
+type TransferDirection string
+
+const (
+	TransferDirectionIncoming TransferDirection = "incoming"
+	TransferDirectionOutgoing TransferDirection = "outgoing"
+)
+
+// TransferalRecord represents a single transferal transaction record.
+type TransferalRecord struct {
+	CreatedAt      string            `json:"created_at"`
+	Status         TransferStatus    `json:"status"`
+	Assets         []Asset           `json:"assets"`
+	TransferalType TransferalType    `json:"transferal_type"`
+	TxHash         string            `json:"tx_hash"`
+	Direction      TransferDirection `json:"direction"`
+}
+
+// GetTransferalRecordsResponse is a collection of transferal transaction records.
+type GetTransferalRecordsResponse []TransferalRecord
+
+// GetTransferalRecordByTxHashResponse contains a single transferal record.
+type GetTransferalRecordByTxHashResponse struct {
+	TransferalRecord TransferalRecord `json:"transferal_record"`
+}
+
+// BuildRequestTransferalTransactionResponse contains the transaction hex for request transferal.
+type BuildRequestTransferalTransactionResponse struct {
 	TxHex string `json:"tx_hex"`
 }
 
-// BuildCancelAllOrdersTransactionResponse contains the transaction hex for order cancellation.
-type BuildCancelAllOrdersTransactionResponse struct {
-	TxHexes []string `json:"tx_hexes"`
+// SubmitRequestTransferalTransactionResponse contains the transaction hash after request transferal submission.
+type SubmitRequestTransferalTransactionResponse struct {
+	TxHash string `json:"tx_hash"`
 }
 
-// SubmitPlaceOrderTransactionResponse contains the order details after successful submission.
-type SubmitPlaceOrderTransactionResponse struct {
-	Order OrderJSON `json:"order"`
+// OrderResponse represents an order with quantities in human-readable format (from Espresso develop).
+type OrderResponse struct {
+	ID                    string                         `json:"id"`
+	AccountID             string                         `json:"account_id"`
+	ActiveOrderUtxoID     *string                        `json:"active_order_utxo_id,omitempty"`
+	Status                string                         `json:"status"`
+	Symbol                Symbol                         `json:"symbol"`
+	BaseQty               string                         `json:"base_qty"`
+	QuoteQty              string                         `json:"quote_qty"`
+	Side                  OrderSide                      `json:"side"`
+	Price                 string                         `json:"price"`
+	Type                  OrderType                      `json:"type"`
+	SlippageBp            *uint64                        `json:"slippage_bp,omitempty"`
+	MarketOrderLimitPrice *string                        `json:"market_order_limit_price,omitempty"`
+	LockedBaseQty         string                         `json:"locked_base_qty"`
+	LockedQuoteQty        string                         `json:"locked_quote_qty"`
+	ExecutedBaseQty       string                         `json:"executed_base_qty"`
+	ExecutedQuoteQty      string                         `json:"executed_quote_qty"`
+	ObOpenOrderBaseQty    string                         `json:"ob_open_order_base_qty"`
+	CommissionUnit        string                         `json:"commission_unit"`
+	Commission            string                         `json:"commission"`
+	CommissionRateBp      uint64                         `json:"commission_rate_bp"`
+	ExecutedPrice         string                         `json:"executed_price"`
+	CreatedAt             string                         `json:"created_at"`
+	UpdatedAt             string                         `json:"updated_at"`
+	OrderExecutionRecords []OrderExecutionRecordResponse `json:"order_execution_records,omitempty"`
 }
 
-// SubmitCancelOrderTransactionResponse contains the transaction hash after order cancellation.
-type SubmitCancelOrderTransactionResponse struct {
-	TxHash string `json:"txhash"`
+// OrderExecutionRecordResponse represents a trade execution with quantities in human-readable format.
+type OrderExecutionRecordResponse struct {
+	ID                  string `json:"id"`
+	OrderID             string `json:"order_id"`
+	AccountID           string `json:"account_id"`
+	ExecutionPrice      string `json:"execution_price"`
+	FilledBaseQty       string `json:"filled_base_qty"`
+	FilledQuoteQty      string `json:"filled_quote_qty"`
+	CommissionUnit      string `json:"commission_unit"`
+	Commission          string `json:"commission"`
+	Role                string `json:"role"`
+	CounterPartyOrderID string `json:"counter_party_order_id"`
+	CreatedAt           string `json:"created_at"`
 }
 
-// SubmitCancelAllOrdersTransactionResponse contains the transaction hash after order cancellation.
-type SubmitCancelAllOrdersTransactionResponse struct {
-	CancelledOrderIds []string `json:"cancelled_order_ids"`
+// GetOpenOrdersResponse contains paginated open orders.
+type GetOpenOrdersResponse struct {
+	Data       []OrderResponse `json:"data"`
+	TotalCount int             `json:"total_count"`
+	TotalPage  int             `json:"total_page"`
+}
+
+// GetTradeOrdersResponse contains paginated trade orders.
+type GetTradeOrdersResponse struct {
+	Data       []OrderResponse `json:"data"`
+	TotalCount int             `json:"total_count"`
+	TotalPage  int             `json:"total_page"`
+}
+
+// GetAccountTradesResponse contains paginated account trades.
+type GetAccountTradesResponse struct {
+	Data       []OrderExecutionRecordResponse `json:"data"`
+	TotalCount int                            `json:"total_count"`
+	TotalPage  int                            `json:"total_page"`
 }

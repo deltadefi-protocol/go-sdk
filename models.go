@@ -4,12 +4,14 @@ package deltadefi
 type OrderStatus string
 
 const (
-	OrderStatusBuilding   OrderStatus = "building"
-	OrderStatusProcessing OrderStatus = "processing"
-	OrderStatusOpen       OrderStatus = "open"
-	OrderStatusClosed     OrderStatus = "closed"
-	OrderStatusFailed     OrderStatus = "failed"
-	OrderStatusCancelled  OrderStatus = "cancelled"
+	OrderStatusProcessing          OrderStatus = "processing"
+	OrderStatusOpen                OrderStatus = "open"
+	OrderStatusFullyFilled         OrderStatus = "fully_filled"
+	OrderStatusPartiallyFilled     OrderStatus = "partially_filled"
+	OrderStatusCancelled           OrderStatus = "cancelled"
+	OrderStatusPartiallyCancelled  OrderStatus = "partially_cancelled"
+	OrderStatusFailed              OrderStatus = "failed"
+	OrderStatusClosed              OrderStatus = "closed"
 )
 
 // OrderSide represents whether an order is buying or selling.
@@ -32,7 +34,11 @@ const (
 type Symbol string
 
 const (
-	ADAUSDM Symbol = "ADAUSDM"
+	ADAUSDM    Symbol = "ADAUSDM"
+	HOSKYUSDM  Symbol = "HOSKYUSDM"
+	NIGHTUSDM  Symbol = "NIGHTUSDM"
+	IAGUSDM    Symbol = "IAGUSDM"
+	SNEKUSDM   Symbol = "SNEKUSDM"
 )
 
 // OrderJSON represents a complete order with all its details.

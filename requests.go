@@ -36,8 +36,9 @@ type BuildWithdrawalTransactionRequest struct {
 
 // BuildTransferalTransactionRequest contains parameters for building a transfer transaction.
 type BuildTransferalTransactionRequest struct {
-	TransferalAmount []rum.Asset `json:"transferal_amount"`
-	ToAddress        string      `json:"to_address"`
+	TransferalAmount []rum.Asset    `json:"transferal_amount"`
+	ToAddress        string         `json:"to_address"`
+	TransferalType   TransferalType `json:"transferal_type,omitempty"`
 }
 
 // SubmitDepositTransactionRequest contains the signed transaction for deposit submission.
@@ -75,14 +76,15 @@ type GetAggregatedPriceRequest struct {
 }
 
 // BuildPlaceOrderTransactionRequest contains parameters for building an order placement transaction.
+// Note: Either QuoteQuantity or BaseQuantity must be provided, but not both.
 type BuildPlaceOrderTransactionRequest struct {
 	Symbol                Symbol    `json:"symbol"`
 	Side                  OrderSide `json:"side"`
 	Type                  OrderType `json:"type"`
-	Quantity              float64   `json:"quantity"`
-	Price                 *float64  `json:"price,omitempty"`
-	MaxSlippageBasisPoint *int      `json:"max_slippage_basis_point,omitempty"`
-	LimitSlippage         *bool     `json:"limit_slippage,omitempty"`
+	QuoteQuantity         string    `json:"quote_quantity,omitempty"`
+	BaseQuantity          string    `json:"base_quantity,omitempty"`
+	Price                 string    `json:"price,omitempty"`
+	MaxSlippageBasisPoint *string   `json:"max_slippage_basis_point,omitempty"`
 	PostOnly              bool      `json:"post_only,omitempty"`
 }
 
@@ -92,14 +94,89 @@ type SubmitPlaceOrderTransactionRequest struct {
 	SignedTx string `json:"signed_tx"`
 }
 
-// SubmitCancelOrderTransactionRequest contains the signed transaction for order cancellation.
-type SubmitCancelOrderTransactionRequest struct {
+// CancelAllOrdersRequest contains parameters for canceling all orders for a symbol.
+type CancelAllOrdersRequest struct {
+	Symbol string `json:"symbol"`
+}
+
+// GetOpenOrdersRequest contains parameters for querying open orders.
+type GetOpenOrdersRequest struct {
+	Symbol string `json:"symbol"`
+	Limit  int    `json:"limit,omitempty"`
+	Page   int    `json:"page,omitempty"`
+}
+
+// GetTradeOrdersRequest contains parameters for querying trade orders.
+type GetTradeOrdersRequest struct {
+	Symbol string `json:"symbol"`
+	Limit  int    `json:"limit,omitempty"`
+	Page   int    `json:"page,omitempty"`
+}
+
+// GetAccountTradesRequest contains parameters for querying account trades.
+type GetAccountTradesRequest struct {
+	Symbol string `json:"symbol"`
+	Limit  int    `json:"limit,omitempty"`
+	Page   int    `json:"page,omitempty"`
+}
+
+// GetTransferalRecordsRequest contains parameters for querying transferal records.
+type GetTransferalRecordsRequest struct {
+	Limit  int    `json:"limit,omitempty"`
+	Page   int    `json:"page,omitempty"`
+	Status string `json:"status,omitempty"` // "pending" or "confirmed"
+}
+
+// GetDepositRecordsRequest contains parameters for querying deposit records.
+type GetDepositRecordsRequest struct {
+	Limit int `json:"limit,omitempty"`
+	Page  int `json:"page,omitempty"`
+}
+
+// GetWithdrawalRecordsRequest contains parameters for querying withdrawal records.
+type GetWithdrawalRecordsRequest struct {
+	Limit int `json:"limit,omitempty"`
+	Page  int `json:"page,omitempty"`
+}
+
+// GetAccountBalanceRequest contains parameters for querying account balance.
+type GetAccountBalanceRequest struct {
+	AssetUnit string `json:"asset_unit,omitempty"`
+}
+
+// TransferalType represents the type of transferal transaction.
+type TransferalType string
+
+const (
+	TransferalTypeDeposit    TransferalType = "deposit"
+	TransferalTypeWithdrawal TransferalType = "withdrawal"
+)
+
+// BuildRequestTransferalTransactionRequest contains parameters for building a request transferal transaction.
+type BuildRequestTransferalTransactionRequest struct {
+	TransferalAmount []rum.Asset    `json:"transferal_amount"`
+	FromAddress      string         `json:"from_address"`
+	TransferalType   TransferalType `json:"transferal_type"`
+}
+
+// SubmitRequestTransferalTransactionRequest contains the signed transaction for request transferal submission.
+type SubmitRequestTransferalTransactionRequest struct {
 	SignedTx string `json:"signed_tx"`
 }
 
-// SubmitCancelAllOrdersTransactionRequest contains the signed transaction for order cancellation.
-type SubmitCancelAllOrdersTransactionRequest struct {
-	SignedTxs []string `json:"signed_txs"`
+// CreateSpotAccountRequest contains parameters for creating a spot account.
+type CreateSpotAccountRequest struct {
+	UserId                string `json:"user_id"`
+	EncryptedOperationKey string `json:"encrypted_operation_key"`
+	OperationKeyHash      string `json:"operation_key_hash"`
+	IsScriptOperationKey  *bool  `json:"is_script_operation_key"`
+	ReferralCode          string `json:"referral_code,omitempty"`
+}
+
+// UpdateSpotAccountRequest contains parameters for updating a spot account.
+type UpdateSpotAccountRequest struct {
+	UserId                string `json:"user_id"`
+	EncryptedOperationKey string `json:"encrypted_operation_key"`
 }
 
 // FloatPtr returns a pointer to the given float64 value.
@@ -118,4 +195,10 @@ func BoolPtr(b bool) *bool {
 // Useful for setting optional fields in request structures.
 func IntPtr(i int) *int {
 	return &i
+}
+
+// StringPtr returns a pointer to the given string value.
+// Useful for setting optional fields in request structures.
+func StringPtr(s string) *string {
+	return &s
 }
